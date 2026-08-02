@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ColorFit">
+  <title>ColorFit Pro</title>
+  
+  <style>
+    :root {
+      --bg: #0a0a0c;
+      --card-bg: rgba(28, 28, 30, 0.75);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent: #0a84ff;
+      --accent-glow: rgba(10, 132, 255, 0.25);
+      --success: #30d158;
+      --warning: #ffd60a;
+      --text: #ffffff;
+      --text-muted: #8e8e93;
+      --text-dark: #1c1c1e;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      padding: max(16px, env(safe-area-inset-top)) 16px max(30px, env(safe-area-inset-bottom)) 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-top: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(20px);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-icon:active {
+      transform: scale(0.95);
+      opacity: 0.8;
+    }
+
+    /* Style Filter Vibe Chips */
+    .vibe-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
+    .vibe-bar::-webkit-scrollbar { display: none; }
+
+    .vibe-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .vibe-chip.active {
+      background: var(--text);
+      color: var(--text-dark);
+      border-color: var(--text);
+    }
+
+    /* Outfit Builder Slots */
+    .builder-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .slot-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      cursor: pointer;
+      backdrop-filter: blur(20px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .slot-card.active-slot {
+      border-color: var(--accent);
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    .slot-card.has-color {
+      border-style: solid;
+    }
+
+    .slot-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .slot-preview {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .slot-card.has-color .slot-preview {
+      border-style: solid;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .slot-color-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .clear-slot {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .slot-card.has-color:hover .clear-slot,
+    .slot-card.has-color .clear-slot {
+      opacity: 1;
+    }
+
+    /* Outfit Score Banner */
+    .score-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(20px);
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .score-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .score-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .score-badge {
+      font-size: 14px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .score-bar-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 3px;
+      transition: width 0.5s ease-out, background-color 0.3s;
+    }
+
+    .score-feedback {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    /* Dynamic Suggestions & Selector Drawer */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(20px);
+      flex: 1;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* Color Grid */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .color-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      padding: 6px 4px;
+      border-radius: var(--radius-sm);
+      transition: background 0.2s;
+    }
+
+    .color-item:active {
+      background: rgba(255, 255, 255, 0.05);
+      transform: scale(0.95);
+    }
+
+    .swatch-wrap {
+      position: relative;
+      margin-bottom: 6px;
+    }
+
+    .swatch {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      border: 2px solid transparent;
+      transition: transform 0.2s;
+    }
+
+    .color-item.selected .swatch {
+      border-color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .match-indicator {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 8px;
+      background: #2c2c2e;
+      color: #fff;
+      border: 1px solid var(--card-border);
+    }
+
+    .match-high { background: var(--success); color: #000; }
+    .match-med { background: var(--warning); color: #000; }
+
+    .color-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .color-item.selected .color-title {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* Saved Fits Drawer */
+    .saved-fits-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .saved-fit-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fit-swatches {
+      display: flex;
+      gap: 6px;
+    }
+
+    .mini-swatch {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🎨</div>
+      <h1>ColorFit <span style="font-size: 12px; color: var(--accent); font-weight: 800; vertical-align: super;">PRO</span></h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="randomizeOutfit()">🎲 Auto</button>
+      <button class="btn-icon" onclick="resetAll()">🧹 Clear</button>
+    </div>
+  </header>
+
+  <!-- Style Vibe Selector -->
+  <div class="vibe-bar">
+    <div class="vibe-chip active" onclick="setVibe('all', this)">✨ All Styles</div>
+    <div class="vibe-chip" onclick="setVibe('minimalist', this)">🖤 Minimalist</div>
+    <div class="vibe-chip" onclick="setVibe('earthy', this)">🌿 Earth Tones</div>
+    <div class="vibe-chip" onclick="setVibe('casual', this)">👟 Smart Casual</div>
+  </div>
+
+  <!-- Interactive 3-Slot Outfit Canvas -->
+  <div class="builder-grid">
+    <!-- Top Slot -->
+    <div class="slot-card active-slot" id="slot-top" onclick="selectSlot('top')">
+      <div class="clear-slot" onclick="clearSlot(event, 'top')">✕</div>
+      <div class="slot-label">Shirt / Top</div>
+      <div class="slot-preview" id="preview-top">👕</div>
+      <div class="slot-color-name" id="name-top">Select</div>
+    </div>
+
+    <!-- Bottom Slot -->
+    <div class="slot-card" id="slot-bottom" onclick="selectSlot('bottom')">
+      <div class="clear-slot" onclick="clearSlot(event, 'bottom')">✕</div>
+      <div class="slot-label">Pants</div>
+      <div class="slot-preview" id="preview-bottom">👖</div>
+      <div class="slot-color-name" id="name-bottom">Select</div>
+    </div>
+
+    <!-- Shoes Slot -->
+    <div class="slot-card" id="slot-shoes" onclick="selectSlot('shoes')">
+      <div class="clear-slot" onclick="clearSlot(event, 'shoes')">✕</div>
+      <div class="slot-label">Shoes</div>
+      <div class="slot-preview" id="preview-shoes">👟</div>
+      <div class="slot-color-name" id="name-shoes">Select</div>
+    </div>
+  </div>
+
+  <!-- Live Harmony & Score Card -->
+  <div class="score-card" id="score-card">
+    <div class="score-header">
+      <span class="score-title">Outfit Harmony</span>
+      <span class="score-badge" id="score-badge">92%</span>
+    </div>
+    <div class="score-bar-bg">
+      <div class="score-bar-fill" id="score-bar"></div>
+    </div>
+    <div class="score-feedback" id="score-feedback">Select colors to analyze match.</div>
+  </div>
+
+  <!-- Color Selector & Dynamic Suggestions -->
+  <div class="section-card">
+    <div class="section-title">
+      <span id="palette-title">Choose Color for Top</span>
+      <span class="section-subtitle" id="palette-subtitle">Sorted by compatibility</span>
+    </div>
+    <div class="color-grid" id="color-grid"></div>
+  </div>
+
+  <!-- Favorites & Saved Outfits -->
+  <div class="section-card" style="flex: 0;">
+    <div class="section-title">
+      <span>Saved Fits</span>
+      <button class="btn-icon" style="padding: 4px 10px; font-size: 11px;" onclick="saveCurrentOutfit()">⭐ Save Current</button>
+    </div>
+    <div class="saved-fits-list" id="saved-fits-list">
+      <div style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 12px;">No saved fits yet. Build a combo and tap Save!</div>
+    </div>
+  </div>
+
+  <script>
+    // --- COLOR DATABASE ---
+    const COLORS = {
+      black:    { name: 'Black', hex: '#161618', border: '#3a3a3c', tags: ['minimalist', 'casual'] },
+      white:    { name: 'White', hex: '#FFFFFF', border: '#d1d1d6', textDark: true, tags: ['minimalist', 'casual'] },
+      cream:    { name: 'Cream', hex: '#F5F2EB', border: '#e5e0d8', textDark: true, tags: ['earthy', 'minimalist'] },
+      charcoal: { name: 'Charcoal', hex: '#2C3539', tags: ['minimalist'] },
+      gray:     { name: 'Gray', hex: '#8E8E93', tags: ['minimalist', 'casual'] },
+      navy:     { name: 'Navy', hex: '#0B1D3A', tags: ['casual', 'minimalist'] },
+      lightblue:{ name: 'Light Blue', hex: '#9BB8D5', textDark: true, tags: ['casual'] },
+      olive:    { name: 'Olive Green', hex: '#4A5335', tags: ['earthy', 'casual'] },
+      sage:     { name: 'Sage Green', hex: '#8A9A86', textDark: true, tags: ['earthy'] },
+      khaki:    { name: 'Khaki', hex: '#C5B358', textDark: true, tags: ['earthy', 'casual'] },
+      tan:      { name: 'Tan / Camel', hex: '#C19A6B', tags: ['earthy'] },
+      brown:    { name: 'Dark Brown', hex: '#4A2E1B', tags: ['earthy'] },
+      burgundy: { name: 'Burgundy', hex: '#581825', tags: ['casual'] },
+      rust:     { name: 'Rust', hex: '#B85233', tags: ['earthy'] }
+    };
+
+    // --- PAIRWISE COMPATIBILITY ENGINE (0 to 100) ---
+    const PAIR_MATRIX = {
+      black:    { black:85, white:100, cream:95, charcoal:90, gray:95, navy:80, lightblue:90, olive:90, sage:85, khaki:95, tan:90, brown:75, burgundy:90, rust:85 },
+      white:    { black:100, white:70, cream:60, charcoal:100, gray:95, navy:100, lightblue:95, olive:95, sage:90, khaki:95, tan:95, brown:95, burgundy:95, rust:90 },
+      cream:    { black:95, white:60, cream:75, charcoal:95, gray:85, navy:100, lightblue:90, olive:95, sage:95, khaki:90, tan:95, brown:95, burgundy:90, rust:95 },
+      charcoal: { black:90, white:100, cream:95, charcoal:80, gray:90, navy:85, lightblue:95, olive:85, sage:85, khaki:90, tan:85, brown:65, burgundy:90, rust:80 },
+      gray:     { black:95, white:95, cream:85, charcoal:90, gray:75, navy:95, lightblue:90, olive:85, sage:85, khaki:80, tan:80, brown:75, burgundy:90, rust:85 },
+      navy:     { black:80, white:100, cream:100, charcoal:85, gray:95, navy:80, lightblue:90, olive:85, sage:80, khaki:100, tan:95, brown:90, burgundy:85, rust:85 },
+      lightblue:{ black:90, white:95, cream:90, charcoal:95, gray:90, navy:90, lightblue:70, olive:80, sage:75, khaki:95, tan:90, brown:85, burgundy:80, rust:80 },
+      olive:    { black:90, white:95, cream:95, charcoal:85, gray:85, navy:85, lightblue:80, olive:75, sage:85, khaki:95, tan:90, brown:90, burgundy:65, rust:80 },
+      sage:     { black:85, white:90, cream:95, charcoal:85, gray:85, navy:80, lightblue:75, olive:85, sage:70, khaki:90, tan:85, brown:85, burgundy:60, rust:75 },
+      khaki:    { black:95, white:95, cream:90, charcoal:90, gray:80, navy:100, lightblue:95, olive:95, sage:90, khaki:70, tan:80, brown:90, burgundy:85, rust:85 },
+      tan:      { black:90, white:95, cream:95, charcoal:85, gray:80, navy:95, lightblue:90, olive:90, sage:85, khaki:80, tan:70, brown:85, burgundy:85, rust:90 },
+      brown:    { black:75, white:95, cream:95, charcoal:65, gray:75, navy:90, lightblue:85, olive:90, sage:85, khaki:90, tan:85, brown:75, burgundy:75, rust:85 },
+      burgundy: { black:90, white:95, cream:90, charcoal:90, gray:90, navy:85, lightblue:80, olive:65, sage:60, khaki:85, tan:85, brown:75, burgundy:70, rust:60 },
+      rust:     { black:85, white:90, cream:95, charcoal:80, gray:85, navy:85, lightblue:80, olive:80, sage:75, khaki:85, tan:90, brown:85, burgundy:60, rust:70 }
+    };
+
+    // --- STATE MANAGEMENT ---
+    let state = {
+      activeSlot: 'top', // 'top', 'bottom', 'shoes'
+      outfit: { top: null, bottom: null, shoes: null },
+      vibeFilter: 'all',
+      savedFits: []
+    };
+
+    // --- INITIALIZATION ---
+    function init() {
+      loadSavedFits();
+      renderCanvas();
+      renderPalette();
+    }
+
+    // --- SLOT SELECTION ---
+    function selectSlot(slotName) {
+      state.activeSlot = slotName;
+      document.querySelectorAll('.slot-card').forEach(el => el.classList.remove('active-slot'));
+      document.getElementById(`slot-${slotName}`).classList.add('active-slot');
+      
+      const titles = { top: 'Shirt / Top', bottom: 'Pants', shoes: 'Shoes' };
+      document.getElementById('palette-title').innerText = `Choose Color for ${titles[slotName]}`;
+      
+      renderPalette();
+    }
+
+    function clearSlot(e, slotName) {
+      e.stopPropagation();
+      state.outfit[slotName] = null;
+      renderCanvas();
+      renderPalette();
+      evaluateHarmony();
+    }
+
+    function resetAll() {
+      state.outfit = { top: null, bottom: null, shoes: null };
+      renderCanvas();
+      renderPalette();
+      evaluateHarmony();
+    }
+
+    // --- COLOR SELECTION & DYNAMIC LOGIC ---
+    function chooseColor(colorKey) {
+      state.outfit[state.activeSlot] = colorKey;
+      
+      // Auto-advance slot if empty
+      if (state.activeSlot === 'top' && !state.outfit.bottom) {
+        selectSlot('bottom');
+      } else if (state.activeSlot === 'bottom' && !state.outfit.shoes) {
+        selectSlot('shoes');
+      } else {
+        renderCanvas();
+        renderPalette();
+      }
+
+      evaluateHarmony();
+    }
+
+    function renderCanvas() {
+      const icons = { top: '👕', bottom: '👖', shoes: '👟' };
+      
+      ['top', 'bottom', 'shoes'].forEach(slot => {
+        const key = state.outfit[slot];
+        const card = document.getElementById(`slot-${slot}`);
+        const preview = document.getElementById(`preview-${slot}`);
+        const nameEl = document.getElementById(`name-${slot}`);
+
+        if (key && COLORS[key]) {
+          const c = COLORS[key];
+          card.classList.add('has-color');
+          preview.style.backgroundColor = c.hex;
+          preview.style.borderColor = c.border || 'transparent';
+          preview.innerText = '';
+          nameEl.innerText = c.name;
+        } else {
+          card.classList.remove('has-color');
+          preview.style.backgroundColor = 'transparent';
+          preview.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+          preview.innerText = icons[slot];
+          nameEl.innerText = 'Select';
+        }
+      });
+    }
+
+    // --- DYNAMIC COMPATIBILITY CALCULATION ENGINE ---
+    function getCandidateScore(candidateColorKey) {
+      const active = state.activeSlot;
+      const otherSlots = ['top', 'bottom', 'shoes'].filter(s => s !== active);
+      
+      const filledOthers = otherSlots.filter(s => state.outfit[s] !== null);
+
+      if (filledOthers.length === 0) return 100; // Default when nothing else selected
+
+      let totalScore = 0;
+      filledOthers.forEach(slot => {
+        const otherColor = state.outfit[slot];
+        totalScore += (PAIR_MATRIX[candidateColorKey][otherColor] || 80);
+      });
+
+      return Math.round(totalScore / filledOthers.length);
+    }
+
+    function renderPalette() {
+      const grid = document.getElementById('color-grid');
+      grid.innerHTML = '';
+
+      // Filter colors by vibe
+      let colorKeys = Object.keys(COLORS).filter(k => {
+        if (state.vibeFilter === 'all') return true;
+        return COLORS[k].tags.includes(state.vibeFilter);
+      });
+
+      // Calculate dynamic score for each color relative to selected items
+      const scoredColors = colorKeys.map(k => ({
+        key: k,
+        score: getCandidateScore(k)
+      }));
+
+      // Sort by best score descending
+      scoredColors.sort((a, b) => b.score - a.score);
+
+      const subtitleEl = document.getElementById('palette-subtitle');
+      const hasOtherItems = Object.values(state.outfit).some(v => v !== null);
+      subtitleEl.innerText = hasOtherItems ? 'Sorted by match compatibility' : 'All available tones';
+
+      scoredColors.forEach(item => {
+        const c = COLORS[item.key];
+        const isSelected = state.outfit[state.activeSlot] === item.key;
+
+        let matchBadge = '';
+        if (hasOtherItems) {
+          if (item.score >= 92) matchBadge = `<span class="match-indicator match-high">BEST</span>`;
+          else if (item.score >= 82) matchBadge = `<span class="match-indicator match-med">${item.score}%</span>`;
+        }
+
+        const btn = document.createElement('div');
+        btn.className = `color-item ${isSelected ? 'selected' : ''}`;
+        btn.onclick = () => chooseColor(item.key);
+
+        btn.innerHTML = `
+          <div class="swatch-wrap">
+            <div class="swatch" style="background-color: ${c.hex}; border-color: ${c.border || 'transparent'}"></div>
+            ${matchBadge}
+          </div>
+          <div class="color-title">${c.name}</div>
+        `;
+        grid.appendChild(btn);
+      });
+    }
+
+    // --- HARMONY & SCORE EVALUATOR ---
+    function evaluateHarmony() {
+      const { top, bottom, shoes } = state.outfit;
+      const filled = [top, bottom, shoes].filter(Boolean);
+      const scoreCard = document.getElementById('score-card');
+
+      if (filled.length < 2) {
+        scoreCard.style.display = 'none';
+        return;
+      }
+
+      scoreCard.style.display = 'block';
+
+      let scores = [];
+      if (top && bottom) scores.push(PAIR_MATRIX[top][bottom]);
+      if (bottom && shoes) scores.push(PAIR_MATRIX[bottom][shoes]);
+      if (top && shoes) scores.push(PAIR_MATRIX[top][shoes]);
+
+      const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+
+      const scoreBar = document.getElementById('score-bar');
+      const scoreBadge = document.getElementById('score-badge');
+      const feedbackEl = document.getElementById('score-feedback');
+
+      scoreBar.style.width = `${avgScore}%`;
+      scoreBadge.innerText = `${avgScore}% Match`;
+
+      if (avgScore >= 90) {
+        scoreBar.style.backgroundColor = 'var(--success)';
+        scoreBadge.style.color = 'var(--success)';
+        feedbackEl.innerHTML = `🔥 <b>Elite Outfit Harmony!</b> Perfectly balanced contrast and high color synergy. You're good to go.`;
+      } else if (avgScore >= 78) {
+        scoreBar.style.backgroundColor = 'var(--warning)';
+        scoreBadge.style.color = 'var(--warning)';
+        feedbackEl.innerHTML = `👍 <b>Solid Combination.</b> Versatile everyday fit. Works well for casual or street settings.`;
+      } else {
+        scoreBar.style.backgroundColor = '#ff453a';
+        scoreBadge.style.color = '#ff453a';
+        feedbackEl.innerHTML = `⚠️ <b>Color Contrast Clash.</b> Consider swapping one item for a neutral tone (Black, White, Cream, or Gray).`;
+      }
+    }
+
+    // --- RANDOM OUTFIT GENERATOR (Guaranteed Matches) ---
+    function randomizeOutfit() {
+      const keys = Object.keys(COLORS);
+      let bestFit = null;
+      let highestScore = 0;
+
+      // Try 20 random combinations and pick the top tier one
+      for (let i = 0; i < 20; i++) {
+        const randTop = keys[Math.floor(Math.random() * keys.length)];
+        const randBottom = keys[Math.floor(Math.random() * keys.length)];
+        const randShoes = keys[Math.floor(Math.random() * keys.length)];
+
+        const score = Math.round((PAIR_MATRIX[randTop][randBottom] + PAIR_MATRIX[randBottom][randShoes] + PAIR_MATRIX[randTop][randShoes]) / 3);
+
+        if (score > highestScore) {
+          highestScore = score;
+          bestFit = { top: randTop, bottom: randBottom, shoes: randShoes };
+        }
+      }
+
+      if (bestFit) {
+        state.outfit = bestFit;
+        renderCanvas();
+        renderPalette();
+        evaluateHarmony();
+      }
+    }
+
+    // --- VIBE FILTER ---
+    function setVibe(vibe, el) {
+      state.vibeFilter = vibe;
+      document.querySelectorAll('.vibe-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      renderPalette();
+    }
+
+    // --- LOCAL STORAGE FOR SAVED FITS ---
+    function saveCurrentOutfit() {
+      const { top, bottom, shoes } = state.outfit;
+      if (!top || !bottom || !shoes) {
+        alert('Please pick all 3 items before saving!');
+        return;
+      }
+
+      const fitId = Date.now();
+      state.savedFits.unshift({ id: fitId, top, bottom, shoes });
+      if (state.savedFits.length > 10) state.savedFits.pop();
+
+      localStorage.setItem('colorfit_saved', JSON.stringify(state.savedFits));
+      renderSavedFits();
+    }
+
+    function loadSavedFits() {
+      const saved = localStorage.getItem('colorfit_saved');
+      if (saved) {
+        try { state.savedFits = JSON.parse(saved); } catch(e) {}
+      }
+      renderSavedFits();
+    }
+
+    function renderSavedFits() {
+      const container = document.getElementById('saved-fits-list');
+      if (state.savedFits.length === 0) {
+        container.innerHTML = `<div style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 12px;">No saved fits yet. Build a combo and tap Save!</div>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      state.savedFits.forEach(fit => {
+        const card = document.createElement('div');
+        card.className = 'saved-fit-card';
+        card.onclick = () => {
+          state.outfit = { top: fit.top, bottom: fit.bottom, shoes: fit.shoes };
+          renderCanvas();
+          renderPalette();
+          evaluateHarmony();
+        };
+
+        card.innerHTML = `
+          <div class="fit-swatches">
+            <div class="mini-swatch" style="background-color: ${COLORS[fit.top].hex}"></div>
+            <div class="mini-swatch" style="background-color: ${COLORS[fit.bottom].hex}"></div>
+            <div class="mini-swatch" style="background-color: ${COLORS[fit.shoes].hex}"></div>
+          </div>
+          <div style="font-size: 12px; font-weight: 600; color: var(--text-muted);">
+            ${COLORS[fit.top].name} · ${COLORS[fit.bottom].name}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
