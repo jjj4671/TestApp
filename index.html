@@ -1,0 +1,2866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ColorFit">
+  <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Outfit color matcher — find perfect wardrobe combinations with Apple-grade polish.">
+  <meta name="format-detection" content="telephone=no">
+  <title>ColorFit</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23007AFF'/><circle cx='35' cy='42' r='12' fill='%23fff'/><circle cx='65' cy='42' r='12' fill='%23fff' opacity='.85'/><circle cx='50' cy='68' r='12' fill='%23fff' opacity='.7'/></svg>">
+  <style>
+    :root {
+      color-scheme: light dark;
+
+      --bg: #F2F2F7;
+      --bg-elevated: #FFFFFF;
+      --bg-secondary: #E5E5EA;
+      --bg-tertiary: #D1D1D6;
+      --bg-grouped: #F2F2F7;
+      --bg-grouped-secondary: #FFFFFF;
+
+      --fill: rgba(120, 120, 128, 0.16);
+      --fill-secondary: rgba(120, 120, 128, 0.12);
+      --fill-tertiary: rgba(118, 118, 128, 0.08);
+
+      --separator: rgba(60, 60, 67, 0.12);
+      --separator-opaque: #C6C6C8;
+
+      --accent: #007AFF;
+      --accent-press: #0066D6;
+      --accent-soft: rgba(0, 122, 255, 0.12);
+      --green: #34C759;
+      --green-soft: rgba(52, 199, 89, 0.14);
+      --orange: #FF9500;
+      --orange-soft: rgba(255, 149, 0, 0.14);
+      --red: #FF3B30;
+      --red-soft: rgba(255, 59, 48, 0.12);
+      --yellow: #FFCC00;
+      --indigo: #5856D6;
+
+      --label: #000000;
+      --label-secondary: rgba(60, 60, 67, 0.6);
+      --label-tertiary: rgba(60, 60, 67, 0.3);
+      --label-quaternary: rgba(60, 60, 67, 0.18);
+      --label-on-accent: #FFFFFF;
+
+      --glass: rgba(255, 255, 255, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --overlay: rgba(0, 0, 0, 0.4);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+      --shadow-sheet: 0 -8px 40px rgba(0, 0, 0, 0.18);
+      --toast-bg: rgba(30, 30, 30, 0.92);
+
+      --radius-xs: 8px;
+      --radius-sm: 10px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 22px;
+      --radius-2xl: 28px;
+      --radius-sheet: 38px;
+      --radius-full: 999px;
+
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --spring: cubic-bezier(0.32, 0.72, 0, 1);
+      --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+      --hit: 44px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --header-h: 0px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #000000;
+      --bg-elevated: #1C1C1E;
+      --bg-secondary: #2C2C2E;
+      --bg-tertiary: #3A3A3C;
+      --bg-grouped: #000000;
+      --bg-grouped-secondary: #1C1C1E;
+
+      --fill: rgba(120, 120, 128, 0.36);
+      --fill-secondary: rgba(120, 120, 128, 0.32);
+      --fill-tertiary: rgba(118, 118, 128, 0.24);
+
+      --separator: rgba(84, 84, 88, 0.65);
+      --separator-opaque: #38383A;
+
+      --accent: #0A84FF;
+      --accent-press: #409CFF;
+      --accent-soft: rgba(10, 132, 255, 0.18);
+      --green: #30D158;
+      --green-soft: rgba(48, 209, 88, 0.18);
+      --orange: #FF9F0A;
+      --orange-soft: rgba(255, 159, 10, 0.18);
+      --red: #FF453A;
+      --red-soft: rgba(255, 69, 58, 0.18);
+      --yellow: #FFD60A;
+      --indigo: #5E5CE6;
+
+      --label: #FFFFFF;
+      --label-secondary: rgba(235, 235, 245, 0.6);
+      --label-tertiary: rgba(235, 235, 245, 0.3);
+      --label-quaternary: rgba(235, 235, 245, 0.18);
+      --label-on-accent: #FFFFFF;
+
+      --glass: rgba(28, 28, 30, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --overlay: rgba(0, 0, 0, 0.55);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+      --shadow-sheet: 0 -8px 40px rgba(0, 0, 0, 0.5);
+      --toast-bg: rgba(58, 58, 60, 0.94);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      overscroll-behavior: none;
+    }
+
+    body {
+      color: var(--label);
+      font-family: var(--font);
+      min-height: 100dvh;
+      line-height: 1.35;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    button {
+      font-family: inherit;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: inherit;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    /* ── App shell ── */
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding: 0 16px calc(20px + var(--safe-bottom));
+      position: relative;
+    }
+
+    /* ── Sticky glass header ── */
+    .app-header-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      margin: 0 -16px;
+      padding: calc(8px + var(--safe-top)) 16px 0;
+      background: linear-gradient(to bottom, var(--bg) 60%, transparent);
+    }
+
+    .app-header-wrap.scrolled {
+      background: var(--glass);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--separator);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .app-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 4px 0 10px;
+      gap: 12px;
+    }
+
+    .large-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      line-height: 1.05;
+      color: var(--label);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+      padding-bottom: 2px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: var(--fill);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      transition: transform 0.25s var(--spring), background 0.2s var(--ease), color 0.2s;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.88);
+      background: var(--fill-secondary);
+    }
+
+    .icon-btn svg { width: 18px; height: 18px; }
+    .icon-btn.muted { color: var(--label-secondary); }
+    .icon-btn.solid {
+      background: var(--accent-soft);
+    }
+
+    /* ── Segmented ── */
+    .segmented {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--fill);
+      border-radius: var(--radius-sm);
+      padding: 2px;
+      margin-bottom: 14px;
+      height: 36px;
+    }
+
+    .segmented-pill {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: calc(50% - 2px);
+      height: calc(100% - 4px);
+      background: var(--bg-elevated);
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.08);
+      transition: transform 0.38s var(--spring);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    [data-theme="dark"] .segmented-pill {
+      background: var(--bg-tertiary);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .segmented[data-mode="closet"] .segmented-pill {
+      transform: translateX(100%);
+    }
+
+    .seg-btn {
+      position: relative;
+      z-index: 1;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.08px;
+      color: var(--label);
+      border-radius: 8px;
+      height: 100%;
+      transition: color 0.2s var(--ease);
+    }
+
+    .seg-btn:not(.active) { color: var(--label-secondary); }
+
+    /* ── Progress ── */
+    .progress-track {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 0;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.35s var(--ease), max-height 0.35s var(--ease), margin 0.35s var(--ease);
+    }
+
+    .progress-track.visible {
+      opacity: 1;
+      max-height: 10px;
+      margin-bottom: 14px;
+    }
+
+    .progress-seg {
+      flex: 1;
+      height: 3.5px;
+      border-radius: 2px;
+      background: var(--fill);
+      transition: background 0.45s var(--spring), transform 0.3s var(--spring);
+    }
+
+    .progress-seg.active {
+      background: var(--accent);
+      transform: scaleY(1.15);
+    }
+    .progress-seg.done { background: var(--green); }
+
+    /* ── Views ── */
+    .app-view {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .app-view.active {
+      display: flex;
+      animation: viewIn 0.4s var(--spring);
+    }
+
+    @keyframes viewIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-panel {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .step-panel.active {
+      display: flex;
+      animation: viewIn 0.36s var(--spring);
+    }
+
+    /* ── Typography ── */
+    .hero-copy {
+      margin-bottom: 18px;
+      padding: 0 2px;
+    }
+
+    .hero-copy h2 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.55px;
+      line-height: 1.12;
+      margin-bottom: 6px;
+    }
+
+    .hero-copy p {
+      font-size: 15px;
+      color: var(--label-secondary);
+      line-height: 1.4;
+    }
+
+    /* ── Grouped list ── */
+    .grouped-list {
+      background: var(--bg-elevated);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .list-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 68px;
+      padding: 12px 16px;
+      width: 100%;
+      text-align: left;
+      transition: background 0.15s var(--ease);
+      position: relative;
+    }
+
+    .list-row:active { background: var(--fill-tertiary); }
+
+    .list-row + .list-row::before {
+      content: "";
+      position: absolute;
+      left: 70px;
+      right: 0;
+      top: 0;
+      height: 0.5px;
+      background: var(--separator);
+    }
+
+    .list-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .list-icon svg { width: 22px; height: 22px; }
+
+    .list-icon.green { background: var(--green-soft); color: var(--green); }
+    .list-icon.orange { background: var(--orange-soft); color: var(--orange); }
+
+    .list-text { flex: 1; min-width: 0; }
+
+    .list-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.24px;
+    }
+
+    .list-sub {
+      font-size: 13px;
+      color: var(--label-secondary);
+      margin-top: 2px;
+    }
+
+    .chevron {
+      color: var(--label-tertiary);
+      flex-shrink: 0;
+      display: grid;
+    }
+
+    .chevron svg { width: 13px; height: 13px; }
+
+    .text-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      text-align: center;
+      padding: 14px;
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--accent);
+      border-radius: var(--radius-md);
+      transition: opacity 0.15s, transform 0.2s var(--spring);
+    }
+
+    .text-btn:active {
+      opacity: 0.45;
+      transform: scale(0.98);
+    }
+
+    .text-btn svg { width: 18px; height: 18px; }
+
+    /* ── Nav ── */
+    .nav-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      min-height: var(--hit);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 1px;
+      color: var(--accent);
+      font-size: 17px;
+      font-weight: 400;
+      padding: 8px 8px 8px 0;
+      min-height: var(--hit);
+      margin-left: -4px;
+      transition: opacity 0.15s;
+    }
+
+    .back-btn:active { opacity: 0.5; }
+    .back-btn svg { width: 20px; height: 20px; }
+
+    .nav-title {
+      flex: 1;
+      font-size: 17px;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: -0.24px;
+      margin-right: 52px;
+    }
+
+    /* ── Outfit bar ── */
+    .outfit-bar {
+      background: var(--bg-elevated);
+      border-radius: var(--radius-xl);
+      padding: 16px 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .slot-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      transition: transform 0.22s var(--spring);
+      min-width: 68px;
+    }
+
+    .slot-btn:active { transform: scale(0.92); }
+
+    .slot-dot {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      border: 2px dashed var(--separator-opaque);
+      display: grid;
+      place-items: center;
+      color: var(--label-tertiary);
+      transition: all 0.35s var(--spring);
+      background: transparent;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slot-btn.filled .slot-dot {
+      border-style: solid;
+      border-color: transparent;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .slot-btn.target .slot-dot {
+      border-style: solid;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+      transform: scale(1.08);
+    }
+
+    .slot-dot svg { width: 20px; height: 20px; }
+
+    .slot-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--label-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .slot-btn.target .slot-label { color: var(--accent); }
+
+    .slot-plus {
+      color: var(--label-quaternary);
+      font-size: 16px;
+      font-weight: 300;
+      margin-top: -18px;
+    }
+
+    /* ── Filter chips ── */
+    .filter-rail {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 0 10px;
+      margin-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .filter-rail::-webkit-scrollbar { display: none; }
+
+    .filter-chip {
+      flex-shrink: 0;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--label-secondary);
+      background: var(--fill);
+      transition: all 0.25s var(--spring);
+      letter-spacing: -0.08px;
+    }
+
+    .filter-chip:active { transform: scale(0.94); }
+
+    .filter-chip.active {
+      background: var(--accent);
+      color: var(--label-on-accent);
+      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+    }
+
+    /* ── Swatches ── */
+    .swatches-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px 4px;
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 2px 0 8px;
+      scrollbar-width: none;
+      max-height: 42dvh;
+      align-content: start;
+    }
+
+    .swatches-grid::-webkit-scrollbar { display: none; }
+
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 4px 8px;
+      border-radius: var(--radius-md);
+      transition: background 0.2s, transform 0.22s var(--spring);
+      position: relative;
+    }
+
+    .swatch:active { transform: scale(0.92); }
+    .swatch.selected { background: var(--accent-soft); }
+
+    .swatch-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-full);
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.28s var(--spring), transform 0.28s var(--spring);
+    }
+
+    [data-theme="dark"] .swatch-circle {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .swatch.selected .swatch-circle {
+      box-shadow: 0 0 0 3px var(--bg), 0 0 0 5.5px var(--accent);
+      transform: scale(1.06);
+    }
+
+    .swatch-check {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.22s var(--spring), transform 0.28s var(--spring-bounce);
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+    }
+
+    .swatch.selected .swatch-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .swatch-check svg { width: 18px; height: 18px; }
+
+    .swatch-name {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--label-secondary);
+      text-align: center;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.2;
+      letter-spacing: -0.1px;
+    }
+
+    .swatch-score {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: -0.15px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .swatch-score.best { color: var(--green); }
+    .swatch-score.good { color: var(--accent); }
+    .swatch-score.okay { color: var(--orange); }
+
+    /* ── Buttons ── */
+    .bottom-bar {
+      margin-top: auto;
+      padding-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      min-height: 52px;
+      background: var(--accent);
+      color: var(--label-on-accent);
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.22s var(--spring), opacity 0.2s, background 0.15s;
+      box-shadow: 0 2px 12px rgba(0, 122, 255, 0.28);
+    }
+
+    [data-theme="dark"] .btn-primary {
+      box-shadow: 0 2px 16px rgba(10, 132, 255, 0.35);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: scale(0.965);
+      background: var(--accent-press);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.32;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      min-height: 48px;
+      background: var(--fill);
+      color: var(--accent);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.22s var(--spring), background 0.15s;
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.965);
+      background: var(--fill-secondary);
+    }
+
+    .btn-secondary svg { width: 16px; height: 16px; }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .action-grid .btn-secondary {
+      min-height: 46px;
+      font-size: 14px;
+      gap: 5px;
+      padding: 0 8px;
+    }
+
+    /* ── Reveal ── */
+    .reveal-stage {
+      background: var(--bg-elevated);
+      border-radius: var(--radius-2xl);
+      padding: 24px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-md);
+      animation: revealPop 0.6s var(--spring);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes revealPop {
+      from { opacity: 0; transform: scale(0.92) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .reveal-mannequin-wrap {
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .reveal-mannequin {
+      width: 150px;
+      height: auto;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.12));
+    }
+
+    .score-ring-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 4px 0 8px;
+    }
+
+    .score-ring-wrap svg {
+      width: 120px;
+      height: 120px;
+      transform: rotate(-90deg);
+    }
+
+    .score-ring-bg {
+      fill: none;
+      stroke: var(--fill);
+      stroke-width: 8;
+    }
+
+    .score-ring-fg {
+      fill: none;
+      stroke: var(--green);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 339.3;
+      stroke-dashoffset: 339.3;
+      transition: stroke-dashoffset 1s var(--spring), stroke 0.3s;
+    }
+
+    .score-ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .reveal-score {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reveal-score-unit {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--label-secondary);
+      margin-top: 1px;
+    }
+
+    .reveal-tag {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      margin-bottom: 12px;
+      color: var(--green);
+    }
+
+    .harmony-breakdown {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .harmony-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--fill-tertiary);
+      border-radius: var(--radius-md);
+      text-align: left;
+    }
+
+    .harmony-dots {
+      display: flex;
+      gap: -2px;
+      flex-shrink: 0;
+    }
+
+    .harmony-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+      border: 1.5px solid var(--bg-elevated);
+    }
+
+    .harmony-dot + .harmony-dot { margin-left: -6px; }
+
+    .harmony-label {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--label-secondary);
+      letter-spacing: -0.1px;
+    }
+
+    .harmony-val {
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--label);
+    }
+
+    .reveal-tip {
+      font-size: 14px;
+      color: var(--label-secondary);
+      line-height: 1.45;
+      background: var(--fill-tertiary);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      width: 100%;
+      text-align: left;
+    }
+
+    .reveal-tip strong {
+      color: var(--label);
+      font-weight: 600;
+    }
+
+    /* Confetti */
+    .confetti-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: inherit;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      top: 40%;
+      left: 50%;
+      opacity: 0;
+      border-radius: 2px;
+      animation: confettiFall 1.2s var(--ease) forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+      100% { opacity: 0; transform: translate(var(--cx), var(--cy)) rotate(var(--cr)) scale(0.4); }
+    }
+
+    /* ── Closet ── */
+    .closet-section { margin-bottom: 16px; }
+
+    .closet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px 8px;
+    }
+
+    .closet-cat {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--label-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .closet-count {
+      font-size: 13px;
+      color: var(--label-tertiary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .closet-quick {
+      display: flex;
+      gap: 6px;
+    }
+
+    .quick-btn {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: var(--accent-soft);
+      transition: opacity 0.15s, transform 0.2s var(--spring);
+    }
+
+    .quick-btn:active {
+      opacity: 0.6;
+      transform: scale(0.94);
+    }
+
+    .chip-rail {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 2px 2px 6px;
+      scrollbar-width: none;
+    }
+
+    .chip-rail::-webkit-scrollbar { display: none; }
+
+    .chip {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px 8px 10px;
+      min-height: 40px;
+      background: var(--bg-elevated);
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-full);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--label-secondary);
+      transition: all 0.28s var(--spring);
+      box-shadow: var(--shadow-sm);
+      letter-spacing: -0.1px;
+    }
+
+    .chip:active { transform: scale(0.94); }
+
+    .chip.owned {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .chip-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: var(--radius-full);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .chip.owned .chip-dot::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/11px no-repeat;
+      background-color: rgba(0, 0, 0, 0.28);
+    }
+
+    .results-list {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-lg);
+      max-height: 62dvh;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .fit-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      min-height: 62px;
+      width: 100%;
+      text-align: left;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .fit-row:active { background: var(--fill-tertiary); }
+
+    .fit-row + .fit-row::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      right: 0;
+      top: 0;
+      height: 0.5px;
+      background: var(--separator);
+    }
+
+    .mini-swatches {
+      display: flex;
+      flex-shrink: 0;
+    }
+
+    .mini-swatch {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+      border: 2px solid var(--bg-elevated);
+    }
+
+    .mini-swatch + .mini-swatch { margin-left: -8px; }
+
+    .fit-names {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    .fit-sub {
+      font-size: 12px;
+      color: var(--label-tertiary);
+      font-weight: 400;
+      margin-top: 1px;
+    }
+
+    .score-badge {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: var(--radius-full);
+      background: var(--green-soft);
+      color: var(--green);
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+      letter-spacing: -0.2px;
+    }
+
+    .score-badge.mid {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .score-badge.low {
+      background: var(--orange-soft);
+      color: var(--orange);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 28px;
+      color: var(--label-secondary);
+    }
+
+    .empty-state .empty-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-full);
+      background: var(--fill);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 14px;
+      color: var(--label-tertiary);
+    }
+
+    .empty-state .empty-icon svg { width: 28px; height: 28px; }
+
+    .empty-state p {
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .empty-state .empty-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--label);
+      margin-bottom: 4px;
+    }
+
+    /* ── Sheets ── */
+    .sheet-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--overlay);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.32s var(--ease);
+    }
+
+    .sheet-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sheet {
+      background: var(--bg);
+      border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+      padding: 8px 16px calc(20px + var(--safe-bottom));
+      max-height: 88dvh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sheet);
+      transform: translateY(100%);
+      transition: transform 0.42s var(--spring);
+      will-change: transform;
+      touch-action: none;
+    }
+
+    .sheet-overlay.show .sheet { transform: translateY(0); }
+    .sheet.dragging { transition: none; }
+
+    .sheet-grabber {
+      width: 36px;
+      height: 5px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      margin: 4px auto 12px;
+      flex-shrink: 0;
+    }
+
+    .sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding: 0 2px;
+      flex-shrink: 0;
+    }
+
+    .sheet-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.35px;
+    }
+
+    .sheet-body {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      flex: 1;
+      touch-action: pan-y;
+    }
+
+    .sheet-fit {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-md);
+      margin-bottom: 8px;
+      min-height: 60px;
+      transition: transform 0.2s var(--spring);
+    }
+
+    .sheet-fit:active { transform: scale(0.98); }
+
+    .sheet-fit-delete {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: var(--red-soft);
+      color: var(--red);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: transform 0.2s var(--spring);
+    }
+
+    .sheet-fit-delete:active { transform: scale(0.88); }
+    .sheet-fit-delete svg { width: 15px; height: 15px; }
+
+    /* Welcome / settings rows */
+    .settings-group {
+      background: var(--bg-elevated);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      min-height: 52px;
+      position: relative;
+    }
+
+    .settings-row + .settings-row::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      right: 0;
+      top: 0;
+      height: 0.5px;
+      background: var(--separator);
+    }
+
+    .settings-row-label {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .settings-row-value {
+      font-size: 15px;
+      color: var(--label-secondary);
+    }
+
+    .welcome-hero {
+      text-align: center;
+      padding: 12px 8px 24px;
+    }
+
+    .welcome-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(145deg, #007AFF, #5856D6);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 8px 24px rgba(0, 122, 255, 0.35);
+    }
+
+    .welcome-icon svg { width: 36px; height: 36px; color: #fff; }
+
+    .welcome-hero h2 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      margin-bottom: 8px;
+    }
+
+    .welcome-hero p {
+      font-size: 15px;
+      color: var(--label-secondary);
+      line-height: 1.45;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 4px 4px;
+    }
+
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .feature-icon svg { width: 18px; height: 18px; }
+
+    .feature-text h3 {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      margin-bottom: 2px;
+    }
+
+    .feature-text p {
+      font-size: 13px;
+      color: var(--label-secondary);
+      line-height: 1.35;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: calc(32px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(28px) scale(0.94);
+      background: var(--toast-bg);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--radius-full);
+      font-size: 14px;
+      font-weight: 550;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s var(--spring);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      white-space: nowrap;
+      max-width: calc(100vw - 40px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    .toast svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    #export-canvas { display: none; }
+
+    /* Theme picker pills */
+    .theme-pills {
+      display: flex;
+      gap: 4px;
+      background: var(--fill);
+      border-radius: var(--radius-full);
+      padding: 3px;
+    }
+
+    .theme-pill {
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--label-secondary);
+      transition: all 0.25s var(--spring);
+    }
+
+    .theme-pill.active {
+      background: var(--bg-elevated);
+      color: var(--label);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    [data-theme="dark"] .theme-pill.active {
+      background: var(--bg-tertiary);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="app-header-wrap" id="header-wrap">
+      <header class="app-header">
+        <h1 class="large-title">ColorFit</h1>
+        <div class="header-actions">
+          <button class="icon-btn" id="sound-btn" onclick="toggleSound()" aria-label="Toggle sound">
+            <svg id="sound-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <svg id="sound-icon-off" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+          </button>
+          <button class="icon-btn" onclick="openSavedDrawer()" aria-label="Lookbook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+          <button class="icon-btn solid" onclick="openSettings()" aria-label="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="segmented" id="mode-segmented" data-mode="guided">
+        <div class="segmented-pill" aria-hidden="true"></div>
+        <button class="seg-btn active" id="tab-mode-guided" onclick="switchMode('guided')">Matcher</button>
+        <button class="seg-btn" id="tab-mode-closet" onclick="switchMode('closet')">Closet</button>
+      </div>
+
+      <div class="progress-track" id="guided-progress-bar">
+        <div class="progress-seg" id="pill-1"></div>
+        <div class="progress-seg" id="pill-2"></div>
+        <div class="progress-seg" id="pill-3"></div>
+        <div class="progress-seg" id="pill-4"></div>
+      </div>
+    </div>
+
+    <!-- Guided Matcher -->
+    <div class="app-view active" id="view-guided">
+      <div class="step-panel active" id="guided-step-1">
+        <div class="hero-copy">
+          <h2>What are you wearing?</h2>
+          <p>Choose your anchor piece to start matching.</p>
+        </div>
+
+        <div class="grouped-list">
+          <button class="list-row" onclick="startGuidedFlow('top')">
+            <div class="list-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+            </div>
+            <div class="list-text">
+              <div class="list-title">Shirt / Top</div>
+              <div class="list-sub">Tee, hoodie, sweater, or jacket</div>
+            </div>
+            <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </button>
+          <button class="list-row" onclick="startGuidedFlow('bottom')">
+            <div class="list-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l1 8v12h-3.5l-1.5-8-1.5 8H7V10L8 2z"/></svg>
+            </div>
+            <div class="list-text">
+              <div class="list-title">Pants / Bottom</div>
+              <div class="list-sub">Jeans, chinos, shorts, or trousers</div>
+            </div>
+            <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </button>
+          <button class="list-row" onclick="startGuidedFlow('shoes')">
+            <div class="list-icon orange">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l2-4c1-2 3-3 5-3h3l2-3h2l1 3h3c1.5 0 2.5 1 3 2.5L22 16H2z"/><path d="M2 16v2h20v-2"/></svg>
+            </div>
+            <div class="list-text">
+              <div class="list-title">Shoes</div>
+              <div class="list-sub">Sneakers, boots, or dress shoes</div>
+            </div>
+            <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </button>
+        </div>
+
+        <button class="text-btn" onclick="autoSurpriseMe()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/><path d="M19 13l.75 2.25L22 16l-2.25.75L19 19l-.75-2.25L16 16l2.25-.75L19 13z"/></svg>
+          Surprise Me
+        </button>
+      </div>
+
+      <div class="step-panel" id="guided-step-selector">
+        <div class="nav-row">
+          <button class="back-btn" onclick="prevGuidedStep()" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+          <div class="nav-title" id="guided-prompt-title">Pick Color</div>
+        </div>
+
+        <div class="outfit-bar">
+          <button class="slot-btn" id="prev-slot-top" onclick="jumpToSlot('top')">
+            <div class="slot-dot" id="prev-dot-top">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+            </div>
+            <span class="slot-label">Top</span>
+          </button>
+          <span class="slot-plus">+</span>
+          <button class="slot-btn" id="prev-slot-bottom" onclick="jumpToSlot('bottom')">
+            <div class="slot-dot" id="prev-dot-bottom">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l1 8v12h-3.5l-1.5-8-1.5 8H7V10L8 2z"/></svg>
+            </div>
+            <span class="slot-label">Pants</span>
+          </button>
+          <span class="slot-plus">+</span>
+          <button class="slot-btn" id="prev-slot-shoes" onclick="jumpToSlot('shoes')">
+            <div class="slot-dot" id="prev-dot-shoes">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l2-4c1-2 3-3 5-3h3l2-3h2l1 3h3c1.5 0 2.5 1 3 2.5L22 16H2z"/><path d="M2 16v2h20v-2"/></svg>
+            </div>
+            <span class="slot-label">Shoes</span>
+          </button>
+        </div>
+
+        <div class="filter-rail" id="color-filters">
+          <button class="filter-chip active" data-filter="all" onclick="setColorFilter('all')">All</button>
+          <button class="filter-chip" data-filter="neutrals" onclick="setColorFilter('neutrals')">Neutrals</button>
+          <button class="filter-chip" data-filter="cool" onclick="setColorFilter('cool')">Cool</button>
+          <button class="filter-chip" data-filter="warm" onclick="setColorFilter('warm')">Warm</button>
+          <button class="filter-chip" data-filter="bold" onclick="setColorFilter('bold')">Bold</button>
+        </div>
+
+        <div class="swatches-grid" id="guided-swatches-grid"></div>
+
+        <div class="bottom-bar">
+          <button class="btn-primary" id="guided-next-btn" onclick="nextGuidedStep()" disabled>Continue</button>
+        </div>
+      </div>
+
+      <div class="step-panel" id="guided-step-reveal">
+        <div class="reveal-stage" id="reveal-stage">
+          <div class="confetti-layer" id="confetti-layer"></div>
+          <div class="reveal-mannequin-wrap">
+            <svg class="reveal-mannequin" viewBox="0 0 240 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <filter id="rev-shadow" x="-20%" y="-10%" width="140%" height="130%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.1"/>
+                </filter>
+                <linearGradient id="revSkin" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#F5D0B5"/>
+                  <stop offset="100%" stop-color="#E0AC69"/>
+                </linearGradient>
+                <clipPath id="topClip"><path d="M80,80 Q120,90 160,80 L185,118 L160,128 L154,200 L86,200 L80,128 L55,118 Z"/></clipPath>
+              </defs>
+              <ellipse cx="120" cy="40" rx="20" ry="26" fill="url(#revSkin)" filter="url(#rev-shadow)"/>
+              <path d="M112,63 L128,63 L130,78 L110,78 Z" fill="url(#revSkin)"/>
+              <path id="rev-svg-top" d="M80,80 Q120,90 160,80 L185,118 L160,128 L154,200 L86,200 L80,128 L55,118 Z"
+                    fill="#1e293b" stroke="rgba(0,0,0,0.06)" stroke-width="1" filter="url(#rev-shadow)"/>
+              <!-- sleeve cuffs hint -->
+              <ellipse cx="58" cy="118" rx="8" ry="5" fill="url(#revSkin)" opacity="0.9"/>
+              <ellipse cx="182" cy="118" rx="8" ry="5" fill="url(#revSkin)" opacity="0.9"/>
+              <path id="rev-svg-bottom" d="M86,201 L154,201 L162,330 L126,330 L120,235 L114,330 L78,330 Z"
+                    fill="#0f172a" stroke="rgba(0,0,0,0.06)" stroke-width="1" filter="url(#rev-shadow)"/>
+              <path id="rev-svg-shoes-l" d="M76,331 L120,331 L122,347 Q105,353 70,353 Q66,345 76,331 Z"
+                    fill="#475569" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+              <path id="rev-svg-shoes-r" d="M124,331 L164,331 Q174,345 170,353 Q135,353 118,347 Z"
+                    fill="#475569" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+            </svg>
+          </div>
+
+          <div class="score-ring-wrap">
+            <svg viewBox="0 0 120 120">
+              <circle class="score-ring-bg" cx="60" cy="60" r="54"/>
+              <circle class="score-ring-fg" id="score-ring-fg" cx="60" cy="60" r="54"/>
+            </svg>
+            <div class="score-ring-center">
+              <div class="reveal-score" id="reveal-score-num">0</div>
+              <div class="reveal-score-unit">match</div>
+            </div>
+          </div>
+
+          <div class="reveal-tag" id="reveal-score-tag">Harmony</div>
+
+          <div class="harmony-breakdown" id="harmony-breakdown"></div>
+
+          <div class="reveal-tip" id="reveal-tip-text"></div>
+        </div>
+
+        <div class="action-grid">
+          <button class="btn-secondary" onclick="saveCurrentLook()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            Save
+          </button>
+          <button class="btn-secondary" onclick="shareLook()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share
+          </button>
+          <button class="btn-secondary" onclick="exportCardPNG()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+        </div>
+
+        <div class="bottom-bar">
+          <button class="btn-primary" onclick="resetGuidedFlow()">Build Another</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Closet -->
+    <div class="app-view" id="view-closet">
+      <div class="step-panel active" id="closet-inventory-setup">
+        <div class="hero-copy">
+          <h2>Your Closet</h2>
+          <p>Tap the colors you own, then generate every valid outfit.</p>
+        </div>
+
+        <div class="closet-section">
+          <div class="closet-header">
+            <span class="closet-cat">Tops</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="closet-quick">
+                <button class="quick-btn" onclick="quickAddNeutrals('top')">+ Neutrals</button>
+                <button class="quick-btn" onclick="clearCategory('top')">Clear</button>
+              </div>
+              <span class="closet-count" id="count-owned-top">0</span>
+            </div>
+          </div>
+          <div class="chip-rail" id="closet-chips-top"></div>
+        </div>
+
+        <div class="closet-section">
+          <div class="closet-header">
+            <span class="closet-cat">Bottoms</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="closet-quick">
+                <button class="quick-btn" onclick="quickAddNeutrals('bottom')">+ Neutrals</button>
+                <button class="quick-btn" onclick="clearCategory('bottom')">Clear</button>
+              </div>
+              <span class="closet-count" id="count-owned-bottom">0</span>
+            </div>
+          </div>
+          <div class="chip-rail" id="closet-chips-bottom"></div>
+        </div>
+
+        <div class="closet-section">
+          <div class="closet-header">
+            <span class="closet-cat">Shoes</span>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="closet-quick">
+                <button class="quick-btn" onclick="quickAddNeutrals('shoes')">+ Neutrals</button>
+                <button class="quick-btn" onclick="clearCategory('shoes')">Clear</button>
+              </div>
+              <span class="closet-count" id="count-owned-shoes">0</span>
+            </div>
+          </div>
+          <div class="chip-rail" id="closet-chips-shoes"></div>
+        </div>
+
+        <div class="bottom-bar">
+          <button class="btn-primary" onclick="generateClosetMatrix()">Generate Outfits</button>
+        </div>
+      </div>
+
+      <div class="step-panel" id="closet-matrix-results">
+        <div class="nav-row">
+          <button class="back-btn" onclick="backToClosetSetup()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Edit
+          </button>
+          <div class="nav-title" id="matrix-count-title">Ranked Fits</div>
+        </div>
+        <div class="results-list" id="matrix-results-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lookbook Sheet -->
+  <div class="sheet-overlay" id="saved-drawer" onclick="onOverlayClick(event, 'saved-drawer')">
+    <div class="sheet" id="lookbook-sheet">
+      <div class="sheet-grabber" id="sheet-grabber"></div>
+      <div class="sheet-header">
+        <h2 class="sheet-title">Lookbook</h2>
+        <button class="icon-btn" onclick="closeSavedDrawer()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="sheet-body" id="saved-list-container"></div>
+    </div>
+  </div>
+
+  <!-- Settings Sheet -->
+  <div class="sheet-overlay" id="settings-drawer" onclick="onOverlayClick(event, 'settings-drawer')">
+    <div class="sheet" id="settings-sheet">
+      <div class="sheet-grabber" id="settings-grabber"></div>
+      <div class="sheet-header">
+        <h2 class="sheet-title">Settings</h2>
+        <button class="icon-btn" onclick="closeSettings()" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="sheet-body">
+        <div class="settings-group">
+          <div class="settings-row">
+            <span class="settings-row-label">Appearance</span>
+            <div class="theme-pills" id="theme-pills">
+              <button class="theme-pill" data-t="system" onclick="setTheme('system')">Auto</button>
+              <button class="theme-pill" data-t="light" onclick="setTheme('light')">Light</button>
+              <button class="theme-pill" data-t="dark" onclick="setTheme('dark')">Dark</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <span class="settings-row-label">Sound Effects</span>
+            <button class="quick-btn" id="settings-sound-btn" onclick="toggleSound()">On</button>
+          </div>
+        </div>
+        <div class="settings-group">
+          <div class="settings-row">
+            <span class="settings-row-label">Saved Looks</span>
+            <span class="settings-row-value" id="settings-saved-count">0</span>
+          </div>
+          <button class="settings-row" onclick="clearLookbook()" style="width:100%;text-align:left">
+            <span class="settings-row-label" style="color:var(--red)">Clear Lookbook</span>
+          </button>
+        </div>
+        <p style="text-align:center;font-size:12px;color:var(--label-tertiary);padding:12px 0 4px;letter-spacing:-0.1px">ColorFit · Made for your wardrobe</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Welcome Sheet -->
+  <div class="sheet-overlay" id="welcome-drawer">
+    <div class="sheet" id="welcome-sheet">
+      <div class="sheet-grabber"></div>
+      <div class="sheet-body">
+        <div class="welcome-hero">
+          <div class="welcome-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><circle cx="6" cy="8" r="2.5" opacity=".85"/><circle cx="18" cy="8" r="2.5" opacity=".7"/><circle cx="12" cy="18" r="2.5" opacity=".55"/></svg>
+          </div>
+          <h2>Welcome to ColorFit</h2>
+          <p>Build outfits that actually go together — with real color harmony scores.</p>
+        </div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <div class="feature-text">
+              <h3>Guided Matcher</h3>
+              <p>Pick an anchor piece and get scored color suggestions as you go.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon" style="background:var(--green-soft);color:var(--green)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            </div>
+            <div class="feature-text">
+              <h3>Closet Matrix</h3>
+              <p>Log what you own and generate every high-harmony combo.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon" style="background:var(--orange-soft);color:var(--orange)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="feature-text">
+              <h3>Lookbook & Share</h3>
+              <p>Save favorites and export beautiful outfit cards.</p>
+            </div>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="dismissWelcome()">Get Started</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast-el">Saved</div>
+  <canvas id="export-canvas" width="1080" height="1350"></canvas>
+
+  <script>
+    const COLORS = {
+      black:     { name: 'Onyx Black',     hex: '#121216', hsl: [0, 0, 7],     cat: 'neutrals' },
+      white:     { name: 'Pure White',     hex: '#FFFFFF', hsl: [0, 0, 100],   cat: 'neutrals' },
+      cream:     { name: 'Warm Cream',     hex: '#F4EFE6', hsl: [38, 38, 93],  cat: 'neutrals' },
+      ivory:     { name: 'Soft Ivory',     hex: '#FFFDD0', hsl: [57, 100, 91], cat: 'neutrals' },
+      charcoal:  { name: 'Charcoal',       hex: '#2C3038', hsl: [220, 12, 19], cat: 'neutrals' },
+      slate:     { name: 'Slate Blue',     hex: '#475569', hsl: [215, 19, 35], cat: 'cool' },
+      heather:   { name: 'Heather Gray',   hex: '#94A3B8', hsl: [215, 25, 65], cat: 'neutrals' },
+      navy:      { name: 'Deep Navy',      hex: '#0F172A', hsl: [222, 47, 11], cat: 'cool' },
+      denim:     { name: 'Classic Denim',  hex: '#2563EB', hsl: [221, 83, 53], cat: 'cool' },
+      lightblue: { name: 'Sky Blue',       hex: '#38BDF8', hsl: [199, 95, 60], cat: 'cool' },
+      teal:      { name: 'Deep Teal',      hex: '#0D9488', hsl: [175, 84, 32], cat: 'cool' },
+      sage:      { name: 'Sage Green',     hex: '#84A98C', hsl: [133, 19, 59], cat: 'cool' },
+      olive:     { name: 'Military Olive', hex: '#4D533C', hsl: [76, 16, 28],  cat: 'warm' },
+      forest:    { name: 'Forest Green',   hex: '#14532D', hsl: [142, 61, 20], cat: 'cool' },
+      khaki:     { name: 'Khaki Tan',      hex: '#D4A373', hsl: [30, 52, 64],  cat: 'warm' },
+      camel:     { name: 'Luxury Camel',   hex: '#C18C5D', hsl: [28, 45, 56],  cat: 'warm' },
+      chocolate: { name: 'Dark Chocolate', hex: '#3B2314', hsl: [23, 49, 15],  cat: 'warm' },
+      rust:      { name: 'Terracotta Rust',hex: '#BC4749', hsl: [359, 46, 51], cat: 'warm' },
+      burgundy:  { name: 'Deep Burgundy',  hex: '#581825', hsl: [347, 57, 22], cat: 'warm' },
+      crimson:   { name: 'Bold Crimson',   hex: '#DC2626', hsl: [0, 72, 51],   cat: 'bold' },
+      coral:     { name: 'Warm Coral',     hex: '#F97316', hsl: [24, 94, 53],  cat: 'bold' },
+      mustard:   { name: 'Mustard Gold',   hex: '#EAB308', hsl: [45, 93, 47],  cat: 'bold' },
+      plum:      { name: 'Royal Plum',     hex: '#7E22CE', hsl: [272, 72, 47], cat: 'bold' },
+      lavender:  { name: 'Soft Lavender',  hex: '#C084FC', hsl: [270, 95, 75], cat: 'bold' },
+      emerald:   { name: 'Emerald Green',  hex: '#059669', hsl: [161, 94, 30], cat: 'cool' },
+      sand:      { name: 'Desert Sand',    hex: '#E6CCB2', hsl: [30, 48, 80],  cat: 'warm' }
+    };
+
+    const NEUTRALS = ['black', 'white', 'cream', 'ivory', 'charcoal', 'slate', 'heather', 'navy', 'sand', 'khaki', 'camel', 'olive'];
+
+    const STYLIST_PAIR_OVERRIDES = {
+      navy:      { khaki: 100, camel: 98, white: 100, cream: 98, denim: 88, burgundy: 96, lightblue: 94, olive: 88, charcoal: 85, black: 84 },
+      black:     { white: 100, cream: 96, heather: 95, charcoal: 92, khaki: 95, camel: 94, denim: 92, olive: 93, rust: 90, burgundy: 93, lightblue: 92 },
+      white:     { navy: 100, black: 100, charcoal: 100, denim: 98, slate: 96, olive: 96, sage: 94, khaki: 96, camel: 96, burgundy: 96, rust: 94, cream: 68, ivory: 70 },
+      cream:     { navy: 98, black: 96, charcoal: 95, olive: 97, sage: 96, chocolate: 96, rust: 96, burgundy: 94, khaki: 94, camel: 96, white: 68 },
+      olive:     { cream: 97, white: 96, black: 93, khaki: 94, camel: 95, navy: 88, rust: 90, chocolate: 92 },
+      charcoal:  { white: 100, lightblue: 97, cream: 95, heather: 94, burgundy: 94, lavender: 92 },
+      denim:     { white: 98, cream: 95, khaki: 95, camel: 94, black: 92, rust: 90 },
+      burgundy:  { navy: 96, white: 96, cream: 94, black: 93, charcoal: 94, heather: 92 },
+      rust:      { cream: 96, white: 94, navy: 91, black: 90, olive: 90, khaki: 90 },
+      crimson:   { emerald: 62, forest: 70, teal: 72 }
+    };
+
+    const SLOT_ICONS = {
+      top: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>',
+      bottom: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l1 8v12h-3.5l-1.5-8-1.5 8H7V10L8 2z"/></svg>',
+      shoes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 16l2-4c1-2 3-3 5-3h3l2-3h2l1 3h3c1.5 0 2.5 1 3 2.5L22 16H2z"/><path d="M2 16v2h20v-2"/></svg>'
+    };
+
+    const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    const BOOKMARK_EMPTY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+    const TRASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+    const CHECK_TOAST = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+    function calculatePairScore(keyA, keyB) {
+      if (keyA === keyB) return 72;
+      const a = COLORS[keyA], b = COLORS[keyB];
+      if (!a || !b) return 75;
+      if (STYLIST_PAIR_OVERRIDES[keyA]?.[keyB] !== undefined) return STYLIST_PAIR_OVERRIDES[keyA][keyB];
+      if (STYLIST_PAIR_OVERRIDES[keyB]?.[keyA] !== undefined) return STYLIST_PAIR_OVERRIDES[keyB][keyA];
+      if (NEUTRALS.includes(keyA) && NEUTRALS.includes(keyB)) return 94;
+      if (NEUTRALS.includes(keyA) || NEUTRALS.includes(keyB)) return 88;
+      const delta = Math.min(Math.abs(a.hsl[0] - b.hsl[0]), 360 - Math.abs(a.hsl[0] - b.hsl[0]));
+      if (delta >= 150 && delta <= 210) return 92;
+      if (delta >= 100 && delta <= 140) return 90;
+      if (delta >= 15 && delta <= 50) return 86;
+      return 76;
+    }
+
+    function getHarmonyType(keyA, keyB) {
+      if (keyA === keyB) return 'Monochrome';
+      const a = COLORS[keyA], b = COLORS[keyB];
+      if (!a || !b) return 'Balanced';
+      if (NEUTRALS.includes(keyA) && NEUTRALS.includes(keyB)) return 'Neutral stack';
+      if (NEUTRALS.includes(keyA) || NEUTRALS.includes(keyB)) return 'Neutral anchor';
+      const delta = Math.min(Math.abs(a.hsl[0] - b.hsl[0]), 360 - Math.abs(a.hsl[0] - b.hsl[0]));
+      if (delta >= 150 && delta <= 210) return 'Complementary';
+      if (delta >= 100 && delta <= 140) return 'Split complement';
+      if (delta >= 15 && delta <= 50) return 'Analogous';
+      if (delta < 15) return 'Near match';
+      return 'Contrast play';
+    }
+
+    function haptic(ms = 10) {
+      try { if (navigator.vibrate) navigator.vibrate(ms); } catch (_) {}
+    }
+
+    class AudioSynthesizer {
+      constructor() { this.ctx = null; this.enabled = localStorage.getItem('colorfit_sound') !== '0'; }
+      init() {
+        if (!this.ctx && (window.AudioContext || window.webkitAudioContext)) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.ctx?.state === 'suspended') this.ctx.resume();
+      }
+      playPop() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(580, t);
+        osc.frequency.exponentialRampToValueAtTime(200, t + 0.07);
+        gain.gain.setValueAtTime(0.07, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(t); osc.stop(t + 0.07);
+      }
+      playChime() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const t = this.ctx.currentTime;
+        [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+          const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(f, t + i * 0.07);
+          gain.gain.setValueAtTime(0.05, t + i * 0.07);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.07 + 0.45);
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(t + i * 0.07);
+          osc.stop(t + i * 0.07 + 0.45);
+        });
+      }
+      playTick() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, t);
+        gain.gain.setValueAtTime(0.04, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(t); osc.stop(t + 0.03);
+      }
+    }
+
+    const soundEngine = new AudioSynthesizer();
+
+    function toggleSound() {
+      soundEngine.enabled = !soundEngine.enabled;
+      localStorage.setItem('colorfit_sound', soundEngine.enabled ? '1' : '0');
+      updateSoundUI();
+      showToast(soundEngine.enabled ? 'Sound On' : 'Sound Off');
+      if (soundEngine.enabled) soundEngine.playPop();
+      haptic(8);
+    }
+
+    function updateSoundUI() {
+      const on = soundEngine.enabled;
+      document.getElementById('sound-icon-on').style.display = on ? '' : 'none';
+      document.getElementById('sound-icon-off').style.display = on ? 'none' : '';
+      document.getElementById('sound-btn').classList.toggle('muted', !on);
+      const sb = document.getElementById('settings-sound-btn');
+      if (sb) sb.textContent = on ? 'On' : 'Off';
+    }
+
+    /* ── Theme ── */
+    function getSystemTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function applyTheme(mode) {
+      const resolved = mode === 'system' ? getSystemTheme() : mode;
+      document.documentElement.setAttribute('data-theme', resolved);
+      const meta = document.querySelector('meta[name="theme-color"]:not([media])') ||
+                   document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', resolved === 'dark' ? '#000000' : '#F2F2F7');
+      document.querySelectorAll('.theme-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.t === mode);
+      });
+    }
+
+    function setTheme(mode) {
+      localStorage.setItem('colorfit_theme', mode);
+      applyTheme(mode);
+      soundEngine.playTick();
+      haptic(8);
+    }
+
+    const DEFAULT_CLOSET = {
+      top: ['black', 'white', 'navy', 'olive', 'cream'],
+      bottom: ['denim', 'khaki', 'black', 'charcoal'],
+      shoes: ['white', 'black', 'camel']
+    };
+
+    const state = {
+      mode: 'guided',
+      guidedStep: 1,
+      flowOrder: ['top', 'bottom', 'shoes'],
+      currentFlowIndex: 0,
+      outfit: { top: null, bottom: null, shoes: null },
+      closetOwned: JSON.parse(JSON.stringify(DEFAULT_CLOSET)),
+      savedFits: [],
+      colorFilter: 'all',
+      themeMode: 'system'
+    };
+
+    function initApp() {
+      state.themeMode = localStorage.getItem('colorfit_theme') || 'system';
+      applyTheme(state.themeMode);
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if ((localStorage.getItem('colorfit_theme') || 'system') === 'system') applyTheme('system');
+      });
+
+      loadSavedFits();
+      loadCloset();
+      renderClosetChips();
+      updateProgressVisibility();
+      updateSoundUI();
+      initSheetGestures('lookbook-sheet', 'sheet-grabber', closeSavedDrawer);
+      initSheetGestures('settings-sheet', 'settings-grabber', closeSettings);
+
+      // Sticky header blur on scroll
+      const shell = document.querySelector('.app-shell');
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            document.getElementById('header-wrap').classList.toggle('scrolled', window.scrollY > 8);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      if (!localStorage.getItem('colorfit_welcomed')) {
+        setTimeout(() => {
+          document.getElementById('welcome-drawer').classList.add('show');
+        }, 400);
+      }
+    }
+
+    function dismissWelcome() {
+      localStorage.setItem('colorfit_welcomed', '1');
+      document.getElementById('welcome-drawer').classList.remove('show');
+      soundEngine.playPop();
+      haptic(10);
+    }
+
+    function switchMode(newMode) {
+      state.mode = newMode;
+      document.getElementById('mode-segmented').dataset.mode = newMode;
+      document.getElementById('tab-mode-guided').classList.toggle('active', newMode === 'guided');
+      document.getElementById('tab-mode-closet').classList.toggle('active', newMode === 'closet');
+      document.getElementById('view-guided').classList.toggle('active', newMode === 'guided');
+      document.getElementById('view-closet').classList.toggle('active', newMode === 'closet');
+      updateProgressVisibility();
+      soundEngine.playPop();
+      haptic(8);
+    }
+
+    function updateProgressVisibility() {
+      const bar = document.getElementById('guided-progress-bar');
+      const show = state.mode === 'guided' && state.guidedStep > 1;
+      bar.classList.toggle('visible', show);
+    }
+
+    function setGuidedPanels(stepNum) {
+      document.getElementById('guided-step-1').classList.toggle('active', stepNum === 1);
+      document.getElementById('guided-step-selector').classList.toggle('active', stepNum >= 2 && stepNum <= 4);
+      document.getElementById('guided-step-reveal').classList.toggle('active', stepNum === 5);
+    }
+
+    function startGuidedFlow(firstSlot) {
+      if (firstSlot === 'top') state.flowOrder = ['top', 'bottom', 'shoes'];
+      else if (firstSlot === 'bottom') state.flowOrder = ['bottom', 'top', 'shoes'];
+      else state.flowOrder = ['shoes', 'top', 'bottom'];
+      state.currentFlowIndex = 0;
+      state.outfit = { top: null, bottom: null, shoes: null };
+      state.colorFilter = 'all';
+      updateFilterChips();
+      soundEngine.playPop();
+      haptic(10);
+      renderGuidedSelector();
+      setGuidedStepView(2);
+    }
+
+    function setGuidedStepView(stepNum) {
+      state.guidedStep = stepNum;
+      setGuidedPanels(stepNum);
+
+      for (let i = 1; i <= 4; i++) {
+        const pill = document.getElementById(`pill-${i}`);
+        pill.classList.remove('active', 'done');
+        if (stepNum === 5) {
+          pill.classList.add('done');
+        } else if (i < stepNum) {
+          pill.classList.add('done');
+        } else if (i === stepNum) {
+          pill.classList.add('active');
+        }
+      }
+
+      updateProgressVisibility();
+      if (stepNum === 5) renderGrandReveal();
+    }
+
+    function prevGuidedStep() {
+      soundEngine.playPop();
+      haptic(8);
+      if (state.guidedStep === 2) setGuidedStepView(1);
+      else if (state.guidedStep > 2) {
+        state.currentFlowIndex--;
+        renderGuidedSelector();
+        setGuidedStepView(state.guidedStep - 1);
+      }
+    }
+
+    function nextGuidedStep() {
+      soundEngine.playPop();
+      haptic(10);
+      if (state.currentFlowIndex < 2) {
+        state.currentFlowIndex++;
+        renderGuidedSelector();
+        setGuidedStepView(state.guidedStep + 1);
+      } else {
+        setGuidedStepView(5);
+      }
+    }
+
+    function jumpToSlot(slotId) {
+      const idx = state.flowOrder.indexOf(slotId);
+      if (idx === -1) return;
+      state.currentFlowIndex = idx;
+      renderGuidedSelector();
+      setGuidedStepView(idx + 2);
+      soundEngine.playPop();
+      haptic(8);
+    }
+
+    function resetGuidedFlow() {
+      state.outfit = { top: null, bottom: null, shoes: null };
+      state.colorFilter = 'all';
+      updateFilterChips();
+      setGuidedStepView(1);
+      soundEngine.playPop();
+      haptic(8);
+    }
+
+    function isLightHex(hex) {
+      const h = hex.replace('#', '');
+      const r = parseInt(h.slice(0, 2), 16);
+      const g = parseInt(h.slice(2, 4), 16);
+      const b = parseInt(h.slice(4, 6), 16);
+      return (r * 299 + g * 587 + b * 114) / 1000 > 160;
+    }
+
+    function setColorFilter(filter) {
+      state.colorFilter = filter;
+      updateFilterChips();
+      renderGuidedSelector();
+      soundEngine.playTick();
+      haptic(6);
+    }
+
+    function updateFilterChips() {
+      document.querySelectorAll('.filter-chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.filter === state.colorFilter);
+      });
+    }
+
+    function renderGuidedSelector() {
+      const targetSlot = state.flowOrder[state.currentFlowIndex];
+      const titles = { top: 'Top Color', bottom: 'Pants Color', shoes: 'Shoe Color' };
+      document.getElementById('guided-prompt-title').textContent = titles[targetSlot];
+
+      ['top', 'bottom', 'shoes'].forEach(slot => {
+        const item = document.getElementById(`prev-slot-${slot}`);
+        const dot = document.getElementById(`prev-dot-${slot}`);
+        const key = state.outfit[slot];
+        item.classList.toggle('target', slot === targetSlot);
+        item.classList.toggle('filled', !!key);
+        if (key && COLORS[key]) {
+          dot.style.backgroundColor = COLORS[key].hex;
+          dot.innerHTML = '';
+        } else {
+          dot.style.backgroundColor = 'transparent';
+          dot.innerHTML = SLOT_ICONS[slot];
+          dot.style.color = '';
+        }
+      });
+
+      const container = document.getElementById('guided-swatches-grid');
+      container.innerHTML = '';
+
+      let keys = Object.keys(COLORS);
+      if (state.colorFilter !== 'all') {
+        keys = keys.filter(k => COLORS[k].cat === state.colorFilter);
+      }
+
+      const scored = keys.map(k => ({
+        key: k,
+        score: getCandidateScore(targetSlot, k)
+      })).sort((a, b) => b.score - a.score);
+
+      const activeColor = state.outfit[targetSlot];
+      const hasOthers = ['top', 'bottom', 'shoes'].some(s => s !== targetSlot && state.outfit[s]);
+
+      scored.forEach(item => {
+        const c = COLORS[item.key];
+        const isSelected = activeColor === item.key;
+        let scoreHtml = '';
+        if (hasOthers) {
+          let cls = 'okay';
+          if (item.score >= 93) cls = 'best';
+          else if (item.score >= 85) cls = 'good';
+          scoreHtml = `<span class="swatch-score ${cls}">${item.score >= 93 ? 'Best' : item.score}</span>`;
+        }
+
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = `swatch${isSelected ? ' selected' : ''}`;
+        card.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+        card.onclick = () => {
+          state.outfit[targetSlot] = item.key;
+          soundEngine.playPop();
+          haptic(10);
+          renderGuidedSelector();
+        };
+        card.innerHTML = `
+          <div class="swatch-circle" style="background-color:${c.hex}">
+            <span class="swatch-check" style="color:${isLightHex(c.hex) ? '#000' : '#fff'}">${CHECK_SVG}</span>
+          </div>
+          <div class="swatch-name">${c.name.split(' ').pop()}</div>
+          ${scoreHtml}
+        `;
+        container.appendChild(card);
+      });
+
+      const btn = document.getElementById('guided-next-btn');
+      btn.disabled = !state.outfit[targetSlot];
+      btn.textContent = state.currentFlowIndex === 2 ? 'See Your Look' : 'Continue';
+    }
+
+    function getCandidateScore(targetSlot, candidateKey) {
+      const otherSlots = ['top', 'bottom', 'shoes'].filter(s => s !== targetSlot && state.outfit[s]);
+      if (otherSlots.length === 0) return 100;
+      let sum = 0;
+      otherSlots.forEach(s => sum += calculatePairScore(candidateKey, state.outfit[s]));
+      return Math.round(sum / otherSlots.length);
+    }
+
+    function animateScore(target) {
+      const el = document.getElementById('reveal-score-num');
+      const ring = document.getElementById('score-ring-fg');
+      const circumference = 2 * Math.PI * 54;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      let stroke = 'var(--green)';
+      if (target < 84) stroke = 'var(--orange)';
+      else if (target < 92) stroke = 'var(--accent)';
+      ring.style.stroke = stroke;
+
+      if (reduce) {
+        el.textContent = `${target}`;
+        ring.style.strokeDashoffset = circumference * (1 - target / 100);
+        return;
+      }
+
+      const start = performance.now();
+      const duration = 900;
+      function frame(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const val = Math.round(target * eased);
+        el.textContent = `${val}`;
+        ring.style.strokeDashoffset = circumference * (1 - (target * eased) / 100);
+        if (t < 1) requestAnimationFrame(frame);
+      }
+      ring.style.strokeDashoffset = circumference;
+      requestAnimationFrame(frame);
+    }
+
+    function spawnConfetti() {
+      const layer = document.getElementById('confetti-layer');
+      layer.innerHTML = '';
+      const colors = ['#007AFF', '#34C759', '#FF9500', '#FF3B30', '#AF52DE', '#FFCC00', '#5AC8FA'];
+      for (let i = 0; i < 28; i++) {
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        const angle = (Math.random() - 0.5) * 160;
+        const dist = 80 + Math.random() * 140;
+        const rad = (angle - 90) * Math.PI / 180;
+        p.style.setProperty('--cx', `${Math.cos(rad) * dist}px`);
+        p.style.setProperty('--cy', `${Math.sin(rad) * dist + 40}px`);
+        p.style.setProperty('--cr', `${(Math.random() - 0.5) * 720}deg`);
+        p.style.background = colors[i % colors.length];
+        p.style.animationDelay = `${Math.random() * 0.15}s`;
+        p.style.width = `${6 + Math.random() * 6}px`;
+        p.style.height = `${6 + Math.random() * 6}px`;
+        p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        layer.appendChild(p);
+      }
+    }
+
+    function renderGrandReveal() {
+      const { top, bottom, shoes } = state.outfit;
+      const getHex = (k) => (k && COLORS[k] ? COLORS[k].hex : '#1e293b');
+
+      document.getElementById('rev-svg-top').setAttribute('fill', getHex(top));
+      document.getElementById('rev-svg-bottom').setAttribute('fill', getHex(bottom));
+      document.getElementById('rev-svg-shoes-l').setAttribute('fill', getHex(shoes));
+      document.getElementById('rev-svg-shoes-r').setAttribute('fill', getHex(shoes));
+
+      const pairTB = calculatePairScore(top, bottom);
+      const pairBS = calculatePairScore(bottom, shoes);
+      const pairTS = calculatePairScore(top, shoes);
+      const avg = Math.round((pairTB + pairBS + pairTS) / 3);
+
+      animateScore(avg);
+
+      const tagEl = document.getElementById('reveal-score-tag');
+      const tipEl = document.getElementById('reveal-tip-text');
+
+      // Breakdown
+      const bd = document.getElementById('harmony-breakdown');
+      const pairs = [
+        { a: top, b: bottom, label: 'Top · Pants', score: pairTB },
+        { a: bottom, b: shoes, label: 'Pants · Shoes', score: pairBS },
+        { a: top, b: shoes, label: 'Top · Shoes', score: pairTS }
+      ];
+      bd.innerHTML = pairs.map(p => `
+        <div class="harmony-row">
+          <div class="harmony-dots">
+            <span class="harmony-dot" style="background:${COLORS[p.a].hex}"></span>
+            <span class="harmony-dot" style="background:${COLORS[p.b].hex}"></span>
+          </div>
+          <span class="harmony-label">${p.label} · ${getHarmonyType(p.a, p.b)}</span>
+          <span class="harmony-val">${p.score}</span>
+        </div>
+      `).join('');
+
+      const types = pairs.map(p => getHarmonyType(p.a, p.b));
+      const uniqueTypes = [...new Set(types.filter(t => t !== 'Neutral stack' && t !== 'Neutral anchor'))];
+
+      if (avg >= 92) {
+        tagEl.textContent = 'Master Level Synergy';
+        tagEl.style.color = 'var(--green)';
+        tipEl.innerHTML = `<strong>Exceptional balance.</strong> ${uniqueTypes.length ? uniqueTypes.join(' + ') + ' tones' : 'Neutral harmony'} create a look ready for date night, work, or anything in between.`;
+        soundEngine.playChime();
+        haptic([10, 40, 10, 40, 10]);
+        spawnConfetti();
+      } else if (avg >= 84) {
+        tagEl.textContent = 'Polished & Stylish';
+        tagEl.style.color = 'var(--accent)';
+        tipEl.innerHTML = `<strong>Clean and versatile.</strong> These colors complement each other naturally${uniqueTypes[0] ? ' via ' + uniqueTypes[0].toLowerCase() + ' pairing' : ''}.`;
+        soundEngine.playPop();
+        haptic([8, 30, 8]);
+      } else {
+        tagEl.textContent = 'Casual Everyday Fit';
+        tagEl.style.color = 'var(--orange)';
+        tipEl.innerHTML = `<strong>Solid casual combo.</strong> Works well for everyday wear. Try swapping one piece toward a neutral for a sharper edge.`;
+        soundEngine.playPop();
+        haptic(10);
+      }
+    }
+
+    function autoSurpriseMe() {
+      const keys = Object.keys(COLORS);
+      let bestCombo = null, maxScore = -1;
+      for (let i = 0; i < 80; i++) {
+        const t = keys[Math.floor(Math.random() * keys.length)];
+        const b = keys[Math.floor(Math.random() * keys.length)];
+        const s = keys[Math.floor(Math.random() * keys.length)];
+        const score = Math.round(
+          (calculatePairScore(t, b) + calculatePairScore(b, s) + calculatePairScore(t, s)) / 3
+        );
+        if (score > maxScore) {
+          maxScore = score;
+          bestCombo = { top: t, bottom: b, shoes: s };
+        }
+      }
+      if (bestCombo) {
+        state.outfit = bestCombo;
+        soundEngine.playChime();
+        haptic([8, 30, 8]);
+        setGuidedStepView(5);
+      }
+    }
+
+    /* ── Closet ── */
+    function persistCloset() {
+      localStorage.setItem('colorfit_closet_owned', JSON.stringify(state.closetOwned));
+    }
+
+    function loadCloset() {
+      try {
+        const raw = localStorage.getItem('colorfit_closet_owned');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed.top && parsed.bottom && parsed.shoes) state.closetOwned = parsed;
+        }
+      } catch (_) {}
+    }
+
+    function renderClosetChips() {
+      ['top', 'bottom', 'shoes'].forEach(cat => {
+        const container = document.getElementById(`closet-chips-${cat}`);
+        container.innerHTML = '';
+        const owned = state.closetOwned[cat];
+        document.getElementById(`count-owned-${cat}`).textContent = `${owned.length}`;
+
+        Object.keys(COLORS).forEach(key => {
+          const c = COLORS[key];
+          const isOwned = owned.includes(key);
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = `chip${isOwned ? ' owned' : ''}`;
+          chip.onclick = () => toggleClosetOwned(cat, key);
+          chip.innerHTML = `<span class="chip-dot" style="background:${c.hex}"></span>${c.name}`;
+          container.appendChild(chip);
+        });
+      });
+    }
+
+    function toggleClosetOwned(cat, key) {
+      const list = state.closetOwned[cat];
+      const idx = list.indexOf(key);
+      if (idx !== -1) list.splice(idx, 1);
+      else list.push(key);
+      persistCloset();
+      soundEngine.playPop();
+      haptic(8);
+      renderClosetChips();
+    }
+
+    function quickAddNeutrals(cat) {
+      const list = state.closetOwned[cat];
+      const neutrals = ['black', 'white', 'cream', 'charcoal', 'navy', 'heather', 'khaki', 'camel'];
+      neutrals.forEach(k => { if (!list.includes(k)) list.push(k); });
+      persistCloset();
+      renderClosetChips();
+      soundEngine.playPop();
+      haptic(8);
+      showToast('Neutrals added');
+    }
+
+    function clearCategory(cat) {
+      state.closetOwned[cat] = [];
+      persistCloset();
+      renderClosetChips();
+      soundEngine.playTick();
+      haptic(8);
+    }
+
+    function generateClosetMatrix() {
+      const { top: tops, bottom: bottoms, shoes: shoesList } = state.closetOwned;
+      if (!tops.length || !bottoms.length || !shoesList.length) {
+        showToast('Pick at least 1 color per category');
+        return;
+      }
+
+      const combos = [];
+      tops.forEach(t => {
+        bottoms.forEach(b => {
+          shoesList.forEach(s => {
+            const scores = [
+              calculatePairScore(t, b),
+              calculatePairScore(b, s),
+              calculatePairScore(t, s)
+            ];
+            const avg = Math.round(scores.reduce((acc, v) => acc + v, 0) / 3);
+            if (avg >= 76) combos.push({ top: t, bottom: b, shoes: s, score: avg });
+          });
+        });
+      });
+
+      combos.sort((a, b) => b.score - a.score);
+      const container = document.getElementById('matrix-results-container');
+      container.innerHTML = '';
+      document.getElementById('matrix-count-title').textContent =
+        `${combos.length} Fit${combos.length === 1 ? '' : 's'}`;
+
+      if (!combos.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">${BOOKMARK_EMPTY}</div>
+            <div class="empty-title">No strong combos</div>
+            <p>Try adding more neutrals to unlock higher harmony fits.</p>
+          </div>`;
+      } else {
+        combos.forEach(fit => {
+          const row = document.createElement('button');
+          row.type = 'button';
+          row.className = 'fit-row';
+          row.onclick = () => {
+            state.outfit = { top: fit.top, bottom: fit.bottom, shoes: fit.shoes };
+            switchMode('guided');
+            setGuidedStepView(5);
+          };
+          let badgeCls = '';
+          if (fit.score < 84) badgeCls = 'low';
+          else if (fit.score < 92) badgeCls = 'mid';
+          row.innerHTML = `
+            <div class="mini-swatches">
+              <span class="mini-swatch" style="background:${COLORS[fit.top].hex}"></span>
+              <span class="mini-swatch" style="background:${COLORS[fit.bottom].hex}"></span>
+              <span class="mini-swatch" style="background:${COLORS[fit.shoes].hex}"></span>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div class="fit-names">${COLORS[fit.top].name} · ${COLORS[fit.bottom].name}</div>
+              <div class="fit-sub">${COLORS[fit.shoes].name}</div>
+            </div>
+            <span class="score-badge ${badgeCls}">${fit.score}%</span>
+          `;
+          container.appendChild(row);
+        });
+      }
+
+      document.getElementById('closet-inventory-setup').classList.remove('active');
+      document.getElementById('closet-matrix-results').classList.add('active');
+      soundEngine.playChime();
+      haptic([8, 30, 8]);
+    }
+
+    function backToClosetSetup() {
+      document.getElementById('closet-matrix-results').classList.remove('active');
+      document.getElementById('closet-inventory-setup').classList.add('active');
+      soundEngine.playPop();
+      haptic(8);
+    }
+
+    /* ── Lookbook ── */
+    function saveCurrentLook() {
+      const { top, bottom, shoes } = state.outfit;
+      if (!top || !bottom || !shoes) return;
+      const exists = state.savedFits.some(
+        f => f.top === top && f.bottom === bottom && f.shoes === shoes
+      );
+      if (exists) {
+        showToast('Already in Lookbook');
+        return;
+      }
+      state.savedFits.unshift({ id: Date.now(), top, bottom, shoes });
+      if (state.savedFits.length > 20) state.savedFits.pop();
+      localStorage.setItem('colorfit_closet_saved', JSON.stringify(state.savedFits));
+      showToast('Saved to Lookbook', true);
+      soundEngine.playChime();
+      haptic([10, 40, 10]);
+    }
+
+    function deleteSavedFit(id, event) {
+      if (event) event.stopPropagation();
+      state.savedFits = state.savedFits.filter(f => f.id !== id);
+      localStorage.setItem('colorfit_closet_saved', JSON.stringify(state.savedFits));
+      openSavedDrawer();
+      showToast('Removed');
+      haptic(12);
+    }
+
+    function loadSavedFits() {
+      try {
+        const raw = localStorage.getItem('colorfit_closet_saved');
+        if (raw) state.savedFits = JSON.parse(raw);
+      } catch (_) {}
+    }
+
+    function openSavedDrawer() {
+      const container = document.getElementById('saved-list-container');
+      container.innerHTML = '';
+
+      if (!state.savedFits.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">${BOOKMARK_EMPTY}</div>
+            <div class="empty-title">No saved fits yet</div>
+            <p>Build a look and tap Save to build your lookbook.</p>
+          </div>`;
+      } else {
+        state.savedFits.forEach(fit => {
+          const score = Math.round((
+            calculatePairScore(fit.top, fit.bottom) +
+            calculatePairScore(fit.bottom, fit.shoes) +
+            calculatePairScore(fit.top, fit.shoes)
+          ) / 3);
+          let badgeCls = '';
+          if (score < 84) badgeCls = 'low';
+          else if (score < 92) badgeCls = 'mid';
+
+          const card = document.createElement('div');
+          card.className = 'sheet-fit';
+          card.innerHTML = `
+            <button type="button" style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;text-align:left;padding:0;background:transparent" data-load="${fit.id}">
+              <div class="mini-swatches">
+                <span class="mini-swatch" style="background:${COLORS[fit.top].hex}"></span>
+                <span class="mini-swatch" style="background:${COLORS[fit.bottom].hex}"></span>
+                <span class="mini-swatch" style="background:${COLORS[fit.shoes].hex}"></span>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div class="fit-names">${COLORS[fit.top].name} · ${COLORS[fit.bottom].name}</div>
+                <div class="fit-sub">${COLORS[fit.shoes].name}</div>
+              </div>
+              <span class="score-badge ${badgeCls}">${score}%</span>
+            </button>
+            <button type="button" class="sheet-fit-delete" aria-label="Delete" data-delete="${fit.id}">${TRASH_SVG}</button>
+          `;
+          card.querySelector('[data-load]').onclick = () => {
+            state.outfit = { top: fit.top, bottom: fit.bottom, shoes: fit.shoes };
+            closeSavedDrawer();
+            switchMode('guided');
+            setGuidedStepView(5);
+          };
+          card.querySelector('[data-delete]').onclick = (e) => deleteSavedFit(fit.id, e);
+          container.appendChild(card);
+        });
+      }
+
+      document.getElementById('saved-drawer').classList.add('show');
+      haptic(8);
+    }
+
+    function closeSavedDrawer() {
+      const sheet = document.getElementById('lookbook-sheet');
+      sheet.style.transform = '';
+      document.getElementById('saved-drawer').classList.remove('show');
+    }
+
+    function openSettings() {
+      document.getElementById('settings-saved-count').textContent = state.savedFits.length;
+      updateSoundUI();
+      applyTheme(localStorage.getItem('colorfit_theme') || 'system');
+      document.getElementById('settings-drawer').classList.add('show');
+      haptic(8);
+      soundEngine.playPop();
+    }
+
+    function closeSettings() {
+      document.getElementById('settings-sheet').style.transform = '';
+      document.getElementById('settings-drawer').classList.remove('show');
+    }
+
+    function clearLookbook() {
+      if (!state.savedFits.length) {
+        showToast('Lookbook is empty');
+        return;
+      }
+      state.savedFits = [];
+      localStorage.setItem('colorfit_closet_saved', '[]');
+      document.getElementById('settings-saved-count').textContent = '0';
+      showToast('Lookbook cleared');
+      haptic(12);
+    }
+
+    function onOverlayClick(e, id) {
+      if (e.target.id === id) {
+        if (id === 'saved-drawer') closeSavedDrawer();
+        else if (id === 'settings-drawer') closeSettings();
+      }
+    }
+
+    function initSheetGestures(sheetId, grabberId, closeFn) {
+      const sheet = document.getElementById(sheetId);
+      const grabber = document.getElementById(grabberId);
+      if (!sheet || !grabber) return;
+      const header = sheet.querySelector('.sheet-header');
+      let startY = 0, currentY = 0, dragging = false;
+
+      function onStart(clientY) {
+        dragging = true;
+        startY = clientY;
+        currentY = 0;
+        sheet.classList.add('dragging');
+      }
+      function onMove(clientY) {
+        if (!dragging) return;
+        currentY = Math.max(0, clientY - startY);
+        sheet.style.transform = `translateY(${currentY}px)`;
+      }
+      function onEnd() {
+        if (!dragging) return;
+        dragging = false;
+        sheet.classList.remove('dragging');
+        if (currentY > 110) {
+          sheet.style.transform = '';
+          closeFn();
+        } else {
+          sheet.style.transform = 'translateY(0)';
+          requestAnimationFrame(() => { sheet.style.transform = ''; });
+        }
+      }
+
+      [grabber, header].filter(Boolean).forEach(el => {
+        el.addEventListener('touchstart', (e) => onStart(e.touches[0].clientY), { passive: true });
+        el.addEventListener('touchmove', (e) => onMove(e.touches[0].clientY), { passive: true });
+        el.addEventListener('touchend', onEnd);
+        el.addEventListener('mousedown', (e) => onStart(e.clientY));
+      });
+      window.addEventListener('mousemove', (e) => { if (dragging) onMove(e.clientY); });
+      window.addEventListener('mouseup', onEnd);
+    }
+
+    /* ── Share & Export ── */
+    async function shareLook() {
+      const { top, bottom, shoes } = state.outfit;
+      if (!top || !bottom || !shoes) return;
+
+      const pairs = [
+        calculatePairScore(top, bottom),
+        calculatePairScore(bottom, shoes),
+        calculatePairScore(top, shoes)
+      ];
+      const avg = Math.round(pairs.reduce((a, b) => a + b, 0) / 3);
+      const text = `My ColorFit look · ${avg}% harmony\n${COLORS[top].name} + ${COLORS[bottom].name} + ${COLORS[shoes].name}`;
+
+      // Try native share with image
+      try {
+        const blob = await renderExportBlob();
+        const file = new File([blob], `colorfit-${Date.now()}.png`, { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'ColorFit Look', text });
+          showToast('Shared', true);
+          haptic(10);
+          return;
+        }
+        if (navigator.share) {
+          await navigator.share({ title: 'ColorFit Look', text });
+          showToast('Shared', true);
+          haptic(10);
+          return;
+        }
+      } catch (e) {
+        if (e.name === 'AbortError') return;
+      }
+      // Fallback
+      exportCardPNG();
+    }
+
+    function renderExportBlob() {
+      return new Promise(resolve => {
+        drawExportCard();
+        const canvas = document.getElementById('export-canvas');
+        canvas.toBlob(blob => resolve(blob), 'image/png');
+      });
+    }
+
+    function drawExportCard() {
+      const canvas = document.getElementById('export-canvas');
+      const ctx = canvas.getContext('2d');
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+      // Background
+      ctx.fillStyle = isDark ? '#000000' : '#F2F2F7';
+      ctx.fillRect(0, 0, 1080, 1350);
+
+      // Card
+      roundRect(ctx, 48, 60, 984, 1230, 48);
+      ctx.fillStyle = isDark ? '#1C1C1E' : '#FFFFFF';
+      ctx.fill();
+
+      // Brand
+      ctx.fillStyle = isDark ? '#0A84FF' : '#007AFF';
+      ctx.font = '700 44px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText('ColorFit', 100, 150);
+
+      ctx.fillStyle = isDark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+      ctx.font = '400 28px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText('Your outfit harmony', 100, 196);
+
+      // Mini mannequin-style blocks
+      const slots = ['top', 'bottom', 'shoes'];
+      const labels = ['Top', 'Pants', 'Shoes'];
+      const { top, bottom, shoes } = state.outfit;
+
+      slots.forEach((s, idx) => {
+        const c = COLORS[state.outfit[s]];
+        if (!c) return;
+        const y = 300 + idx * 200;
+
+        // Circle
+        ctx.beginPath();
+        ctx.arc(160, y, 56, 0, Math.PI * 2);
+        ctx.fillStyle = c.hex;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+        ctx.stroke();
+
+        ctx.fillStyle = isDark ? '#FFFFFF' : '#000000';
+        ctx.font = '600 34px -apple-system, BlinkMacSystemFont, sans-serif';
+        ctx.fillText(labels[idx], 250, y - 8);
+        ctx.fillStyle = isDark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+        ctx.font = '400 28px -apple-system, BlinkMacSystemFont, sans-serif';
+        ctx.fillText(c.name, 250, y + 32);
+      });
+
+      const pairs = [
+        calculatePairScore(top, bottom),
+        calculatePairScore(bottom, shoes),
+        calculatePairScore(top, shoes)
+      ];
+      const avg = Math.round(pairs.reduce((a, b) => a + b, 0) / 3);
+
+      // Score pill
+      roundRect(ctx, 100, 980, 280, 72, 36);
+      ctx.fillStyle = avg >= 92 ? (isDark ? 'rgba(48,209,88,0.2)' : 'rgba(52,199,89,0.14)') :
+                      avg >= 84 ? (isDark ? 'rgba(10,132,255,0.2)' : 'rgba(0,122,255,0.12)') :
+                                  (isDark ? 'rgba(255,159,10,0.2)' : 'rgba(255,149,0,0.14)');
+      ctx.fill();
+
+      ctx.fillStyle = avg >= 92 ? (isDark ? '#30D158' : '#34C759') :
+                      avg >= 84 ? (isDark ? '#0A84FF' : '#007AFF') :
+                                  (isDark ? '#FF9F0A' : '#FF9500');
+      ctx.font = '700 36px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText(`${avg}% Harmony`, 128, 1028);
+
+      // Pair scores
+      ctx.fillStyle = isDark ? 'rgba(235,235,245,0.45)' : 'rgba(60,60,67,0.45)';
+      ctx.font = '500 24px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText(`Top↔Pants ${pairs[0]}  ·  Pants↔Shoes ${pairs[1]}  ·  Top↔Shoes ${pairs[2]}`, 100, 1120);
+
+      ctx.fillStyle = isDark ? 'rgba(235,235,245,0.3)' : 'rgba(60,60,67,0.3)';
+      ctx.font = '400 22px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText('colorfit · outfit color matcher', 100, 1220);
+    }
+
+    function exportCardPNG() {
+      drawExportCard();
+      const canvas = document.getElementById('export-canvas');
+      const link = document.createElement('a');
+      link.download = `colorfit-look-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('Exported', true);
+      haptic(10);
+      soundEngine.playPop();
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function showToast(msg, success = false) {
+      const el = document.getElementById('toast-el');
+      el.innerHTML = (success ? CHECK_TOAST : '') + `<span>${msg}</span>`;
+      el.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => el.classList.remove('show'), 2200);
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
