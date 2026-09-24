@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Atelier">
+<meta name="theme-color" content="#12110F" id="themeColor">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="Pick a top. Atelier scores the pants, then the shoes.">
+<title>Atelier</title>
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAACyklEQVR42u3dwU0DMRRF0VSAEGVOW/RCW7AGwSJI/h6/dxZ3TfJzNApje/J4e335lFJ6GIKAloCWgJaAFtAS0BLQEtAS0AJaAloCWgJaAlpAS0BLQEtAS0ALaAloCWgJaAloAS0BLQEtAS0BLaAloCWgJaAloAW0BLQEtAS0gDYIAS0BLQEtAS2gJaAloCWgJaAFtAS0BLQEtAS0gJaAloCWgD6mj/frW2YC9PGI/8qsgD4aMOBARwMGHOh4xHADHQkYcKDjEcMNdDxmqIEehbz77wEN8ygoqIG+HeT01wW0K3L0awTaVdnVGmhXPFdroONAQA10zK0xt/iAjlrEsCBTDDptZc5KYyno1KVmS+iFoFP3T9gXUgg6eUOQzU5loJN3udnBBzTQQJ8LOnkvsn3WZaCTN9g7PAB0zAfvNEwh6ORjUI54AR3zwTuzWAg69cCqg7iFoFNPYTtdDjTQQJ8NOvVZGZ4BAnTMh5/4noAuwfwTQOJ7AroMc3JAAw10G2hQoAZaQN8RNCBQx4CeGnwjtibUVVdooF2hY1C3fq2ZmivQm57nBrTbdsejbv7Hc2KmQA/DBnrNLIHegLr59uDELIEeRg30ujkCPQy7fQFn5QyB3oAa6DXzA3oDakvs17L5Ab0BNdDXktkBvQG2TVD/m4Mn+N8UNdDPz8FPUtwUtW2qzyFN++Egv/VtnzLQQAMNNNBAAw000EBDXYoZaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmigoYYZaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmigoYYZaKCBBhpooIEGGmiggQYaaKCBloCWgJaAFtAS0BLQEtAS0AJaAloCWgJaQEtAS0BLQEtAC2gJaAloCWgJaAEtAS0BLQEtAS2gJaAloCWgpV/6AhSptKn24uOrAAAAAElFTkSuQmCC">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAACyklEQVR42u3dwU0DMRRF0VSAEGVOW/RCW7AGwSJI/h6/dxZ3TfJzNApje/J4e335lFJ6GIKAloCWgJaAFtAS0BLQEtAS0AJaAloCWgJaAlpAS0BLQEtAS0ALaAloCWgJaAloAS0BLQEtAS0BLaAloCWgJaAloAW0BLQEtAS0gDYIAS0BLQEtAS2gJaAloCWgJaAFtAS0BLQEtAS0gJaAloCWgD6mj/frW2YC9PGI/8qsgD4aMOBARwMGHOh4xHADHQkYcKDjEcMNdDxmqIEehbz77wEN8ygoqIG+HeT01wW0K3L0awTaVdnVGmhXPFdroONAQA10zK0xt/iAjlrEsCBTDDptZc5KYyno1KVmS+iFoFP3T9gXUgg6eUOQzU5loJN3udnBBzTQQJ8LOnkvsn3WZaCTN9g7PAB0zAfvNEwh6ORjUI54AR3zwTuzWAg69cCqg7iFoFNPYTtdDjTQQJ8NOvVZGZ4BAnTMh5/4noAuwfwTQOJ7AroMc3JAAw10G2hQoAZaQN8RNCBQx4CeGnwjtibUVVdooF2hY1C3fq2ZmivQm57nBrTbdsejbv7Hc2KmQA/DBnrNLIHegLr59uDELIEeRg30ujkCPQy7fQFn5QyB3oAa6DXzA3oDakvs17L5Ab0BNdDXktkBvQG2TVD/m4Mn+N8UNdDPz8FPUtwUtW2qzyFN++Egv/VtnzLQQAMNNNBAAw000EBDXYoZaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmigoYYZaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmiggQYaaKCBBhpooIEGGmigoYYZaKCBBhpooIEGGmiggQYaaKCBloCWgJaAFtAS0BLQEtAS0AJaAloCWgJaQEtAS0BLQEtAC2gJaAloCWgJaAEtAS0BLQEtAS2gJaAloCWgpV/6AhSptKn24uOrAAAAAElFTkSuQmCC">
+<style>
+  :root {
+    --bg: #11100e;
+    --text: #f4f0e8;
+    --muted: #8f887e;
+    --line: rgba(244,240,232,.12);
+    --serif: "Iowan Old Style", Palatino, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.35;
+    overscroll-behavior: none;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  button:focus-visible { outline: 2px solid #c6a36a; outline-offset: 3px; }
+  #app {
+    min-height: 100dvh;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: calc(20px + env(safe-area-inset-top)) 24px calc(32px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+  }
+  header { display: flex; justify-content: space-between; align-items: center; min-height: 32px; }
+  #back { color: var(--muted); font-size: 16px; }
+  #back[hidden] { visibility: hidden; }
+  #count { color: var(--muted); font-size: 13px; letter-spacing: .14em; }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 42px;
+    letter-spacing: -.035em;
+    line-height: 1;
+    margin: 36px 0 10px;
+  }
+  #sub { margin: 0; color: var(--muted); min-height: 1.4em; }
+  #choices { margin-top: 28px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px 10px; }
+  .swatch { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .swatch i {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.16);
+  }
+  .swatch span { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.15; }
+  .swatch:active i { transform: scale(.94); }
+  .row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    text-align: left;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+  }
+  .dot {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.16);
+    display: block;
+  }
+  .row b { font-weight: 500; font-size: 18px; }
+  .pct { font-variant-numeric: tabular-nums; font-size: 20px; letter-spacing: -.03em; }
+  .pieces { display: flex; gap: 22px; margin-top: 48px; }
+  .pieces i {
+    display: block; width: 64px; height: 64px; border-radius: 50%;
+    margin-bottom: 12px; border: 1px solid rgba(255,255,255,.16);
+  }
+  .pieces strong { display: block; font-family: var(--serif); font-weight: 500; font-size: 22px; }
+  .pieces span { color: var(--muted); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+  #again { margin-top: 40px; color: var(--muted); font-size: 16px; align-self: flex-start; }
+
+</style>
+</head>
+<body>
+<main id="app">
+  <header>
+    <button type="button" id="back" data-act="back" hidden>Back</button>
+    <span id="count"></span>
+  </header>
+  <h1 id="ask"></h1>
+  <p id="sub"></p>
+  <div id="choices"></div>
+</main>
+<script>
+const RAW = [
+  ["ivory","Ivory","#F3EEE6","neutral","warm"],
+  ["white","White","#F6F6F3","neutral","neutral"],
+  ["cream","Cream","#E6D3B4","neutral","warm"],
+  ["sand","Sand","#D9C6A3","neutral","warm"],
+  ["stone","Stone","#C7B7A3","neutral","warm"],
+  ["greige","Greige","#B6A79A","neutral","neutral"],
+  ["camel","Camel","#C4A36A","neutral","warm"],
+  ["tan","Tan","#A67B4A","neutral","warm"],
+  ["khaki","Khaki","#8C7A3E","earth","warm"],
+  ["taupe","Taupe","#8A7868","neutral","warm"],
+  ["warmgrey","Warm Grey","#7C746C","neutral","warm"],
+  ["coolgrey","Cool Grey","#8D9298","neutral","cool"],
+  ["charcoal","Charcoal","#3A3A3A","neutral","neutral"],
+  ["black","Black","#141414","neutral","neutral"],
+  ["navy","Navy","#1B2744","neutral","cool"],
+  ["ink","Ink","#101820","neutral","cool"],
+  ["olive","Olive","#5C6738","earth","warm"],
+  ["forest","Forest","#1E3A30","earth","cool"],
+  ["sage","Sage","#9AAD8C","earth","cool"],
+  ["chocolate","Chocolate","#4A3326","earth","warm"],
+  ["cognac","Cognac","#8E4E30","earth","warm"],
+  ["rust","Rust","#A34B32","earth","warm"],
+  ["terracotta","Terracotta","#C56A4C","earth","warm"],
+  ["burgundy","Burgundy","#6C2C38","earth","warm"],
+  ["wine","Wine","#5A2830","earth","warm"],
+  ["brown","Brown","#6A432A","earth","warm"],
+  ["indigo","Indigo","#2A3868","deep","cool"],
+  ["cobalt","Cobalt","#1E4E8A","deep","cool"],
+  ["teal","Teal","#1C6562","deep","cool"],
+  ["emerald","Emerald","#0E6848","deep","cool"],
+  ["plum","Plum","#5A3A5C","deep","cool"],
+  ["cherry","Cherry","#8A2430","deep","warm"],
+  ["dustyblue","Dusty Blue","#6D8BA4","soft","cool"],
+  ["powder","Powder","#C9D6E4","soft","cool"],
+  ["sky","Sky","#8FB6CC","soft","cool"],
+  ["lavender","Lavender","#C8BDD2","soft","cool"],
+  ["blush","Blush","#E4C0BE","soft","warm"],
+  ["butter","Butter","#E4D4A0","soft","warm"],
+  ["pink","Pink","#E7A3B2","soft","warm"],
+  ["red","Red","#B3262C","clear","warm"],
+  ["rose","Rose","#C45662","clear","warm"],
+  ["coral","Coral","#E07A5C","clear","warm"],
+  ["mustard","Mustard","#C4922A","clear","warm"]
+];
+
+const CLASSICS = {
+  navy:["camel","cream","ivory","stone","khaki","white","tan","sand","olive","greige"],
+  white:["navy","black","indigo","olive","camel","charcoal","chocolate","ink"],
+  ivory:["navy","black","indigo","olive","chocolate","charcoal","burgundy"],
+  cream:["navy","indigo","chocolate","olive","black","burgundy","forest"],
+  black:["ivory","white","camel","greige","blush","stone","coolgrey","sand"],
+  charcoal:["white","ivory","camel","blush","stone","cream","pink"],
+  red:["navy","charcoal","white","black","cream","ivory","indigo"],
+  burgundy:["navy","cream","camel","charcoal","ivory","white","forest","stone"],
+  wine:["cream","navy","camel","charcoal","ivory","stone"],
+  olive:["cream","ivory","white","camel","navy","tan","black","sand"],
+  camel:["navy","white","ivory","indigo","chocolate","olive","ink","black"],
+  tan:["white","navy","ivory","indigo","cream"],
+  khaki:["white","navy","ivory","indigo","cream"],
+  sage:["ivory","white","navy","cream","tan","blush","charcoal"],
+  blush:["navy","charcoal","greige","sage","white","chocolate","ink"],
+  dustyblue:["camel","stone","navy","ivory","chocolate","cream","tan"],
+  powder:["navy","charcoal","camel","indigo","chocolate"],
+  sky:["navy","white","stone","camel","indigo","cream"],
+  indigo:["camel","cream","white","stone","khaki","tan","ivory"],
+  cobalt:["stone","camel","white","khaki","cream","navy"],
+  emerald:["camel","cream","white","navy","sand","ivory"],
+  teal:["camel","cream","white","navy","sand","cognac","ivory"],
+  mustard:["navy","indigo","chocolate","cream","white","ink","charcoal"],
+  coral:["navy","cream","white","stone","indigo","charcoal"],
+  pink:["navy","charcoal","greige","white","sage","ink"],
+  lavender:["charcoal","navy","white","greige","sage","ink"],
+  plum:["cream","camel","stone","blush","ivory","sand"],
+  rust:["navy","cream","indigo","olive","stone","ivory"],
+  terracotta:["navy","cream","indigo","olive","ivory","stone"],
+  chocolate:["cream","ivory","camel","white","dustyblue","powder","sand"],
+  cognac:["navy","cream","white","indigo","ivory"],
+  forest:["camel","cream","tan","ivory","sand","rust"],
+  cherry:["navy","black","cream","charcoal","indigo","ivory"],
+  rose:["navy","charcoal","cream","greige","ivory"],
+  butter:["navy","indigo","chocolate","white","charcoal"],
+  greige:["white","navy","black","indigo","burgundy","ink"],
+  stone:["navy","white","indigo","black","burgundy","cream"],
+  sand:["navy","white","indigo","chocolate","burgundy"],
+  warmgrey:["white","ivory","navy","camel","blush"],
+  coolgrey:["white","navy","black","camel","blush","ivory"],
+  ink:["camel","ivory","white","stone","blush","sand"],
+  taupe:["white","ivory","navy","blush","cream"],
+  brown:["cream","ivory","white","dustyblue","navy","sand"]
+};
+
+const MUD = new Set([
+  "black|navy","navy|black","black|ink","ink|black","navy|ink","ink|navy",
+  "white|ivory","ivory|white","white|cream","cream|ivory","ivory|cream","cream|white",
+  "burgundy|red","red|burgundy","red|cherry","cherry|red","burgundy|wine","wine|burgundy",
+  "brown|black","black|chocolate","chocolate|black","camel|tan","tan|camel","tan|khaki","khaki|tan"
+]);
+
+const SHOE_IDS = ["black","white","ivory","cognac","chocolate","tan","navy","coolgrey","olive","burgundy","sand","brown"];
+const LAYER_IDS = ["camel","black","navy","charcoal","olive","chocolate","ivory","stone","coolgrey","burgundy","greige","tan","ink","cream"];
+
+const SHOE_WITH = {
+  navy:["cognac","black","white","tan","brown"],
+  indigo:["white","cognac","black","tan"],
+  black:["black","white"],
+  charcoal:["black","white","cognac"],
+  white:["tan","cognac","white","black","brown"],
+  ivory:["tan","cognac","black","brown"],
+  cream:["cognac","tan","brown","white"],
+  camel:["cognac","brown","white","tan"],
+  khaki:["cognac","brown","white","tan"],
+  olive:["cognac","white","tan","brown"],
+  stone:["white","tan","cognac","brown"],
+  sand:["white","tan","cognac"],
+  greige:["white","black","tan"],
+  burgundy:["black","cognac","burgundy"],
+  chocolate:["cognac","brown","ivory"],
+  tan:["tan","cognac","white"],
+  coolgrey:["white","black","coolgrey"],
+  warmgrey:["white","cognac","black"]
+};
+
+const TOPS = [
+  {id:"tee", name:"T-shirt", tuck:false, occasions:["off","weekend","training","evening"]},
+  {id:"oxford", name:"Oxford", tuck:true, occasions:["off","office","weekend","evening"]},
+  {id:"polo", name:"Polo", tuck:true, occasions:["off","weekend","office"]},
+  {id:"knit", name:"Knit", tuck:false, occasions:["off","office","weekend","evening"]},
+  {id:"blouse", name:"Blouse", tuck:false, occasions:["off","office","evening","weekend"]},
+  {id:"hoodie", name:"Hoodie", tuck:false, occasions:["off","weekend","training"]}
+];
+const BOTTOMS = [
+  {id:"jeans", name:"Jeans", occasions:["off","weekend","evening"]},
+  {id:"chinos", name:"Chinos", occasions:["off","office","weekend"]},
+  {id:"trousers", name:"Trousers", occasions:["off","office","evening","weekend"]},
+  {id:"wide", name:"Wide leg", occasions:["off","evening","weekend","office"]},
+  {id:"shorts", name:"Shorts", occasions:["off","weekend","training"]},
+  {id:"skirt", name:"Skirt", occasions:["off","office","evening","weekend"]}
+];
+const SHOES = [
+  {id:"sneaker", name:"Sneaker", occasions:["off","weekend","training"]},
+  {id:"loafer", name:"Loafer", occasions:["off","office","weekend","evening"]},
+  {id:"oxford", name:"Oxford", occasions:["office","evening","off"]},
+  {id:"boot", name:"Boot", occasions:["off","weekend","evening","office"]},
+  {id:"sandal", name:"Sandal", occasions:["off","weekend"], seasons:["spring","summer"]},
+  {id:"heel", name:"Heel", occasions:["evening","off","office"]}
+];
+const LAYERS = [
+  {id:"overcoat", name:"Overcoat", occasions:["off","office","evening","weekend"], seasons:["autumn","winter","spring"]},
+  {id:"trench", name:"Trench", occasions:["off","office","weekend","evening"], seasons:["spring","autumn"]},
+  {id:"blazer", name:"Blazer", occasions:["office","evening","off","weekend"]},
+  {id:"denim", name:"Denim jacket", occasions:["off","weekend"]},
+  {id:"bomber", name:"Bomber", occasions:["off","weekend","training"]},
+  {id:"cardigan", name:"Cardigan", occasions:["off","office","weekend","evening"]}
+];
+const OCCASIONS = [
+  {id:"off", name:"Off-duty"},
+  {id:"office", name:"Office"},
+  {id:"evening", name:"Evening"},
+  {id:"weekend", name:"Weekend"},
+  {id:"training", name:"Training"}
+];
+const SEASONS = [
+  {id:"spring", name:"Spring"},
+  {id:"summer", name:"Summer"},
+  {id:"autumn", name:"Autumn"},
+  {id:"winter", name:"Winter"}
+];
+const FAMILIES = [
+  ["neutral","Neutrals"],
+  ["earth","Earth"],
+  ["deep","Deep"],
+  ["soft","Soft"],
+  ["clear","Clear"]
+];
+const TAGS = {
+  classic:"Classic", anchor:"Neutral", tonal:"Tonal", complement:"Opposite",
+  neighbor:"Close", split:"Contrast", echo:"Continues", ground:"Grounds", works:"Possible"
+};
+
+function hexToHsl(hex) {
+  const r = parseInt(hex.slice(1,3),16)/255;
+  const g = parseInt(hex.slice(3,5),16)/255;
+  const b = parseInt(hex.slice(5,7),16)/255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  const l = (max+min)/2;
+  let h = 0, s = 0;
+  const d = max-min;
+  if (d) {
+    s = d / (1 - Math.abs(2*l-1));
+    if (max === r) h = ((g-b)/d) % 6;
+    else if (max === g) h = (b-r)/d + 2;
+    else h = (r-g)/d + 4;
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+  return {h, s:s*100, l:l*100};
+}
+function hslToHex(h,s,l) {
+  s/=100; l/=100;
+  const a = s * Math.min(l, 1-l);
+  const f = n => {
+    const k = (n + h/30) % 12;
+    const c = l - a * Math.max(Math.min(k-3, 9-k, 1), -1);
+    return Math.round(255*c).toString(16).padStart(2,"0");
+  };
+  return "#"+f(0)+f(8)+f(4);
+}
+function shade(hex, t) {
+  const n = parseInt(hex.slice(1),16);
+  let r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  const f = c => {
+    const x = t<0 ? c*(1+t) : c+(255-c)*t;
+    return Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2,"0");
+  };
+  return "#"+f(r)+f(g)+f(b);
+}
+function hueDist(a,b) {
+  let d = Math.abs(a-b);
+  return d>180 ? 360-d : d;
+}
+const PALETTE = RAW.map(([id,name,hex,family,undertone]) => ({id,name,hex,family,undertone,...hexToHsl(hex)}));
+const byId = Object.fromEntries(PALETTE.map(c => [c.id, c]));
+
+function autoSeason() {
+  const m = new Date().getMonth();
+  if (m<=1 || m===11) return "winter";
+  if (m<=4) return "spring";
+  if (m<=7) return "summer";
+  return "autumn";
+}
+function allowed(list, occ, season) {
+  return list.filter(t => (!t.occasions || t.occasions.includes(occ)) && (!t.seasons || t.seasons.includes(season)));
+}
+function defaultTop(occ){ return {off:"tee", office:"oxford", evening:"blouse", weekend:"tee", training:"hoodie"}[occ]; }
+function defaultBottom(occ){ return {off:"chinos", office:"trousers", evening:"trousers", weekend:"jeans", training:"shorts"}[occ]; }
+function defaultShoe(occ, season){
+  if (occ==="training" || occ==="weekend") return "sneaker";
+  if (occ==="office") return "loafer";
+  if (occ==="evening") return "heel";
+  if (season==="winter" || season==="autumn") return "boot";
+  return "sneaker";
+}
+function defaultLayer(occ, season){
+  if (occ==="training") return "bomber";
+  if (occ==="office") return "blazer";
+  if (season==="winter") return "overcoat";
+  if (season==="autumn" || season==="spring") return "trench";
+  return "cardigan";
+}
+function pickType(list, id, occ, season, fallback) {
+  const ok = allowed(list, occ, season);
+  if (ok.some(t => t.id===id)) return id;
+  if (ok.some(t => t.id===fallback)) return fallback;
+  return ok[0] ? ok[0].id : id;
+}
+function typeName(list, id){ return (list.find(t => t.id===id) || {}).name || ""; }
+function garment(list, id){ return list.find(t => t.id===id); }
+
+
+function judgeBottom(top, bottom, ctx, bottomType){
+  let score = 40;
+  const tags = [];
+  const classic = (CLASSICS[top.id]||[]).includes(bottom.id);
+  if (classic) { score += 24; tags.push("classic"); }
+  if (MUD.has(top.id+"|"+bottom.id)) score -= 22;
+  const d = hueDist(top.h, bottom.h);
+  const dL = Math.abs(top.l-bottom.l);
+  const neutralB = bottom.family==="neutral" || bottom.s<14;
+  const neutralT = top.family==="neutral" || top.s<14;
+  if (neutralB && !neutralT) {
+    score += 28; tags.push("anchor");
+    if (dL>18 && dL<70) score += 10;
+  } else if (neutralT && neutralB) {
+    if (dL>28) { score += 30; tags.push("tonal"); }
+    else if (dL>16) { score += 8; tags.push("tonal"); }
+    else score -= 20;
+  } else if (d<15) {
+    if (dL>30) { score += 24; tags.push("tonal"); }
+    else score -= 24;
+  } else if (d<=46) {
+    score += 20; tags.push("neighbor");
+    if (bottom.s+10<top.s) score += 8;
+  } else if (d>=150) {
+    if (bottom.s<50 || dL>26 || neutralB) { score += 18; tags.push("complement"); }
+    else score -= 6;
+  } else if (d>=68 && d<=112) {
+    score -= 8;
+    if (bottom.s<30 || neutralB) score += 16;
+  } else score += 8;
+  if (dL<12 && top.s>16 && bottom.s>16) score -= 16;
+  if (dL>=22 && dL<=58) score += 8;
+  if (top.s>50 && bottom.s>55 && d>16 && !classic) score -= 16;
+  if (ctx.season==="autumn" && ["camel","tan","cognac","rust","burgundy","olive","chocolate","brown","khaki","terracotta","wine"].includes(bottom.id)) score += 6;
+  if (ctx.season==="summer" && ["white","ivory","sand","stone","khaki","cream"].includes(bottom.id)) score += 5;
+  if (ctx.season==="winter" && ["navy","charcoal","black","burgundy","ink","chocolate","indigo"].includes(bottom.id)) score += 5;
+  if (ctx.season==="spring" && ["sage","blush","cream","powder","sky","stone"].includes(bottom.id)) score += 5;
+  let tag = "works";
+  for (const key of ["classic","anchor","tonal","complement","neighbor"]) if (tags.includes(key)) { tag = key; break; }
+  return {score: Math.max(1, Math.round(score)), tag};
+}
+function rankBottoms(){
+  if (!state.top.color) return [];
+  const ctx = {occasion:state.occasion, season:state.season};
+  return PALETTE.filter(c => c.hex!==state.top.color.hex).map(color => {
+    const j = judgeBottom(state.top.color, color, ctx, state.bottom.type);
+    return {color, ...j};
+  }).sort((a,b)=>b.score-a.score);
+}
+function judgeShoe(top, bottom, shoe, ctx, shoeType){
+  let score = 36;
+  const tags = [];
+  const dB = hueDist(shoe.h, bottom.h);
+  const dLB = Math.abs(shoe.l-bottom.l);
+  const echo = dB<16 && dLB<20;
+  const ground = (shoe.family==="neutral" || shoe.s<18) && shoe.l<24;
+  const classic = (SHOE_WITH[bottom.id]||[]).includes(shoe.id);
+  if (echo) { score += 30; tags.push("echo"); }
+  if (ground) { score += 26; tags.push("ground"); }
+  if (classic) { score += 18; tags.push("classic"); }
+  const neutralS = shoe.family==="neutral" || shoe.s<16 || SHOE_IDS.includes(shoe.id);
+  if (!neutralS && hueDist(shoe.h, top.h)>28 && dB>28 && !classic) score -= 18;
+  if ((shoeType==="loafer"||shoeType==="boot") && ["cognac","black","chocolate","brown","burgundy","tan"].includes(shoe.id)) score += 8;
+  if (bottom.id==="black" && (shoe.id==="cognac"||shoe.id==="brown")) score -= 8;
+  let tag = tags.includes("echo") ? "echo" : tags.includes("classic") ? "classic" : tags.includes("ground") ? "ground" : "works";
+  return {score: Math.max(1, Math.round(score)), tag};
+}
+function rankShoes(){
+  if (!state.top.color || !state.bottom.color) return [];
+  const ctx = {occasion:state.occasion, season:state.season};
+  return PALETTE.filter(c => SHOE_IDS.includes(c.id)).map(color => {
+    const j = judgeShoe(state.top.color, state.bottom.color, color, ctx, state.shoes.type);
+    return {color, ...j};
+  }).sort((a,b)=>b.score-a.score);
+}
+const state = {
+  occasion: "off",
+  season: autoSeason(),
+  top: { type: "tee", color: null },
+  bottom: { type: "chinos", color: null },
+  shoes: { type: "loafer", color: null },
+  layer: null,
+  step: "top"
+};
+function freeze(c){
+  if (!c) return null;
+  return {id:c.id, name:c.name, hex:c.hex, h:c.h, s:c.s, l:c.l, family:c.family, undertone:c.undertone};
+}
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function pct(score, best){
+  if (!best) return 0;
+  return Math.max(34, Math.min(98, Math.round(score / best * 97)));
+}
+function show(list){
+  const best = list.length ? list[0].score : 1;
+  return list.slice(0, 7).map(r => ({...r, pct: pct(r.score, best)}));
+}
+function render(){
+  const ask = document.getElementById("ask");
+  const sub = document.getElementById("sub");
+  const box = document.getElementById("choices");
+  const back = document.getElementById("back");
+  const count = document.getElementById("count");
+  back.hidden = state.step === "top";
+  if (state.step === "top") {
+    ask.textContent = "Pick a top";
+    sub.textContent = "The rest follows this color.";
+    count.textContent = "1 / 3";
+    box.innerHTML = `<div class="grid">${PALETTE.map(c =>
+      `<button type="button" class="swatch" data-act="top" data-id="${c.id}" aria-label="${esc(c.name)}"><i style="background:${c.hex}"></i><span>${esc(c.name)}</span></button>`
+    ).join("")}</div>`;
+    return;
+  }
+  if (state.step === "pants") {
+    ask.textContent = "Pants";
+    sub.textContent = "How well each sits with " + state.top.color.name.toLowerCase() + ".";
+    count.textContent = "2 / 3";
+    box.innerHTML = show(rankBottoms()).map(r =>
+      `<button type="button" class="row" data-act="pants" data-id="${esc(r.color.id)}"><i class="dot" style="background:${r.color.hex}"></i><b>${esc(r.color.name)}</b><span class="pct">${r.pct}%</span></button>`
+    ).join("");
+    return;
+  }
+  if (state.step === "shoes") {
+    ask.textContent = "Shoes";
+    sub.textContent = "For " + state.top.color.name.toLowerCase() + " and " + state.bottom.color.name.toLowerCase() + ".";
+    count.textContent = "3 / 3";
+    box.innerHTML = show(rankShoes()).map(r =>
+      `<button type="button" class="row" data-act="shoes" data-id="${esc(r.color.id)}"><i class="dot" style="background:${r.color.hex}"></i><b>${esc(r.color.name)}</b><span class="pct">${r.pct}%</span></button>`
+    ).join("");
+    return;
+  }
+  const t = state.top.color, b = state.bottom.color, s = state.shoes.color;
+  const pantsPct = show(rankBottoms()).find(r => r.color.hex===b.hex);
+  const shoePct = show(rankShoes()).find(r => r.color.hex===s.hex);
+  const together = Math.round(((pantsPct?pantsPct.pct:90) + (shoePct?shoePct.pct:90)) / 2);
+  ask.textContent = "This one.";
+  sub.textContent = together + "% together.";
+  count.textContent = "";
+  back.hidden = false;
+  box.innerHTML = `
+    <div class="pieces">
+      <div><i style="background:${t.hex}"></i><strong>${esc(t.name)}</strong><span>Top</span></div>
+      <div><i style="background:${b.hex}"></i><strong>${esc(b.name)}</strong><span>Pants</span></div>
+      <div><i style="background:${s.hex}"></i><strong>${esc(s.name)}</strong><span>Shoes</span></div>
+    </div>
+    <button type="button" id="again" data-act="again">Start over</button>`;
+}
+document.body.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]");
+  if (!b) return;
+  const id = b.dataset.id;
+  if (b.dataset.act === "top") {
+    state.top.color = freeze(byId[id]);
+    state.bottom.color = null;
+    state.shoes.color = null;
+    state.step = "pants";
+  } else if (b.dataset.act === "pants") {
+    state.bottom.color = freeze(byId[id]);
+    state.shoes.color = null;
+    state.step = "shoes";
+  } else if (b.dataset.act === "shoes") {
+    const color = byId[id] || state.bottom.color;
+    state.shoes.color = freeze(color);
+    state.step = "done";
+  } else if (b.dataset.act === "back") {
+    if (state.step === "pants") state.step = "top";
+    else if (state.step === "shoes") state.step = "pants";
+    else if (state.step === "done") state.step = "shoes";
+  } else if (b.dataset.act === "again") {
+    state.top.color = null;
+    state.bottom.color = null;
+    state.shoes.color = null;
+    state.step = "top";
+  }
+  render();
+});
+render();
+
+</script>
+</body>
+</html>
